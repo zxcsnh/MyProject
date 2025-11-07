@@ -1,0 +1,20 @@
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: blue;
+}
+.left {
+    width: 10%;
+    background-color: orange;
+}
+.sider {
+    width: 1px;
+}
+.sider:hover {
+    cursor: ew-resize;
+}
+.right {
+    flex: 1;
+    background-color: aquamarine;
+}
