@@ -1,20 +1,91 @@
+
 .container {
+    container-type: inline-size; /* 启用容器查询 */
     height: 100%;
     display: flex;
     justify-content: space-between;
-    background-color: blue;
+
 }
+
+* {
+    border: 1px solid black;
+}
+
 .left {
-    width: 10%;
-    background-color: orange;
+    width: var(--left-width);
+    max-width: 50%;
+    min-width: var(--left-min-width);
+    background-color: aqua;
+    position: relative;
+    overflow: hidden;
 }
+
+.left-min {
+    min-width: var(--left-min-min-width);
+    max-width: var(--left-min-min-width);
+    background-color: pink;
+}
+
+.left-close {
+    width: 0;
+    min-width: 0;
+}
+
 .sider {
-    width: 1px;
+    width: 10px;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    transform: translateX(50%);
+    /* background-color: black; */
+    /* z-index: 1; */
 }
+
 .sider:hover {
     cursor: ew-resize;
 }
+
 .right {
     flex: 1;
-    background-color: aquamarine;
+    background-color: navy;
+}
+
+.icon-left-min:hover{
+    cursor: ew-resize;
+    user-select: none;
+}
+
+.button-left-open{
+    display: none;
+}
+
+.button-left-close{
+    display: block;
+}
+
+@container (max-width: 600px) {
+    .left {
+        width: 0;
+        min-width: 0;
+        
+    }
+    .left-open {
+        width: var(--left-width);
+        min-width: var(--left-width);
+    }
+    .sider {
+        display: none;
+    }
+
+    .icon-left-min{
+        display: none;
+    }
+
+    .button-left-open{
+        display: block;
+    }
+    .button-left-close{
+        display: none;
+    }
 }

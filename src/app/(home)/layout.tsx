@@ -1,57 +1,96 @@
 "use client";
 
 import "./layout.css"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined
+} from "@ant-design/icons";
 
-function HomeLayout({children}: Readonly<{children: React.ReactNode;}>)
-{
-  const [width, setWidth] = useState(10);
+
+function HomeLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+  // 常数
+  const LEFT_MIN_WIDTH = 200;
+  const LEFT_MIN_MIN_WIDTH = 50;
+
+  const [leftWidth, setLeftWidth] = useState(LEFT_MIN_WIDTH);
+  const [isLeftMin, setIsLeftMin] = useState(false);
+  const [isLeftClose, setIsLeftClose] = useState(false);
+  const [isLeftOpen, setIsLeftOpen] = useState(true);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  // const [mousePosition, setMousePosition] = useState({x:100,y:100});
-  const handleMouseDown = ()=>{
+  const handleMouseDown = () => {
     setIsMouseDown(true);
-    console.log("PUSH");
-  }
-  const handleMouseUp = ()=>{
-    setIsMouseDown(false);
-    // console.log(mousePosition);
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "ew-resize";
   }
 
-  // const handleMouseMove: MouseMoveHandler = (e) => {
+  const handleMouseUp = () => {
+    if (isMouseDown) {
+      setIsMouseDown(false);
+      document.body.style.userSelect = "auto";
+      document.body.style.cursor = "default";
+    }
+  }
+
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (!isMouseDown) return;
-    // setMousePosition({
-    //   x: e.clientX,
-    //   y: e.clientY,
-    // });
-    const innerWidth = window.innerWidth;
-    const clientX = e.clientX;
-    console.log(innerWidth, clientX);
-    const result = Math.ceil(clientX * 100 / innerWidth);
-    setWidth(result);
+    if (isMouseDown) {
+      const clientX = e.clientX;
+      if (!isLeftMin && clientX <= LEFT_MIN_MIN_WIDTH) {
+        handleSetLeftMin();
+      }
+      else if (isLeftMin && clientX >= LEFT_MIN_WIDTH) {
+        handleSetLeftMin();
+      }
+      else {
+        setLeftWidth(clientX);
+      }
+    }
   };
 
+  const handleSetLeftMin = () => {
+    setIsLeftMin(!isLeftMin);
+  }
+
   return (
-    <div className="container" onMouseMove={handleMouseMove}>
+    <div
+      className="container"
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
       <div
-        className="left" 
-        style={{'width': width + '%'}}
+        style={{
+          '--left-width': isLeftMin ? LEFT_MIN_MIN_WIDTH : leftWidth + 'px',
+          "--left-min-width": LEFT_MIN_WIDTH + "px",
+          "--left-min-min-width": LEFT_MIN_MIN_WIDTH + "px",
+        } as React.CSSProperties
+        }
+        className={`
+          left
+          ${isLeftMin ? "left-min" : ""} 
+          ${isLeftClose ? "left-close" : ""} 
+          ${isLeftOpen ? "" : "left-open"} 
+        `}
       >
+        <div
+          className="sider"
+          onMouseDown={handleMouseDown}
+        />
+
+        {
+          !isLeftMin?
+          <MenuFoldOutlined className="icon-left-min" onClick={handleSetLeftMin} title="123"/>
+          :
+          <MenuUnfoldOutlined className="icon-left-min" onClick={handleSetLeftMin} />
+        }
       </div>
-      <div
-        className="sider"
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        
-      ></div>
       <div
         className="right"
       >
-        <button onClick={()=>{
-          if(width < 100){
-            setWidth(width+10);
-          };
-        }}>按钮
+        <button className="button-left-close" onClick={() => { setIsLeftClose(!isLeftClose); }}>
+          按钮
+        </button>
+        <button className="button-left-open" onClick={() => { setIsLeftOpen(!isLeftOpen); }}>
+          按钮
         </button>
       </div>
       {/* {children} */}
