@@ -1,95 +1,110 @@
 "use client";
 
 import "./layout.css"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined
 } from "@ant-design/icons";
 
+import {
+  Tooltip,
+  Button
+} from "antd";
 
 function HomeLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
   // 常数
-  const LEFT_MIN_WIDTH = 200;
-  const LEFT_MIN_MIN_WIDTH = 50;
+  const SIDEBAR_MIN_WIDTH = 200;
+  const SIDEBAR_MAX_WIDTH = 1000;
 
-  const [leftWidth, setLeftWidth] = useState(LEFT_MIN_WIDTH);
-  const [isLeftMin, setIsLeftMin] = useState(false);
-  const [isLeftClose, setIsLeftClose] = useState(false);
-  const [isLeftOpen, setIsLeftOpen] = useState(true);
-  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [sideBarWidth, setSideBarWidth] = useState(SIDEBAR_MIN_WIDTH);
+  const [isSideBarClose, setIsSideBarClose] = useState(false);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
+
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const isDraggingRef = useRef(false);
+
   const handleMouseDown = () => {
-    setIsMouseDown(true);
+    if (isDraggingRef.current) return;
+    isDraggingRef.current = true;
     document.body.style.userSelect = "none";
     document.body.style.cursor = "ew-resize";
-  }
 
-  const handleMouseUp = () => {
-    if (isMouseDown) {
-      setIsMouseDown(false);
-      document.body.style.userSelect = "auto";
-      document.body.style.cursor = "default";
-    }
-  }
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (isMouseDown) {
-      const clientX = e.clientX;
-      if (!isLeftMin && clientX <= LEFT_MIN_MIN_WIDTH) {
-        handleSetLeftMin();
-      }
-      else if (isLeftMin && clientX >= LEFT_MIN_WIDTH) {
-        handleSetLeftMin();
-      }
-      else {
-        setLeftWidth(clientX);
+    const handleMouseUp = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false;
+        document.body.style.userSelect = "auto";
+        document.body.style.cursor = "default";
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
       }
     }
-  };
 
-  const handleSetLeftMin = () => {
-    setIsLeftMin(!isLeftMin);
+    const handleMouseMove = (ev: MouseEvent) => {
+      if (isDraggingRef.current) {
+        const sidebar = sidebarRef.current;
+        if (!sidebar) return;
+        const rect = sidebar.getBoundingClientRect();
+        const newWidth = Math.max(SIDEBAR_MIN_WIDTH, Math.min(ev.clientX - rect.left, SIDEBAR_MAX_WIDTH));
+        setSideBarWidth(newWidth);
+      }
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   }
+
 
   return (
     <div
       className="container"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
     >
-      <div
-        style={{
-          '--left-width': isLeftMin ? LEFT_MIN_MIN_WIDTH : leftWidth + 'px',
-          "--left-min-width": LEFT_MIN_WIDTH + "px",
-          "--left-min-min-width": LEFT_MIN_MIN_WIDTH + "px",
-        } as React.CSSProperties
-        }
-        className={`
-          left
-          ${isLeftMin ? "left-min" : ""} 
-          ${isLeftClose ? "left-close" : ""} 
-          ${isLeftOpen ? "" : "left-open"} 
-        `}
-      >
+      <div className="left">
         <div
-          className="sider"
-          onMouseDown={handleMouseDown}
-        />
+          ref={sidebarRef}
+          className={`
+          sidebar
+          ${isSideBarClose ? "sidebar-close" : ""} 
+          ${isSideBarOpen ? "" : "sidebar-open"} 
+          `}
+          style={{
+            '--sidebar-width': sideBarWidth + 'px',
+            "--sidebar-min-width": SIDEBAR_MIN_WIDTH + "px",
+          } as React.CSSProperties
+          }
 
-        {
-          !isLeftMin?
-          <MenuFoldOutlined className="icon-left-min" onClick={handleSetLeftMin} title="123"/>
-          :
-          <MenuUnfoldOutlined className="icon-left-min" onClick={handleSetLeftMin} />
-        }
+        >
+          <div
+            className="sider"
+            onMouseDown={handleMouseDown}
+          />
+          <div className="sidebar-container">
+            <div className="sidebar-top">
+              <div className="title">
+                这是标题
+              </div>
+              {/* <Tooltip placement="rightBottom" title={"关闭边栏"}> */}
+                <div className="icon-sidebar-min" onClick={() => { setIsSideBarClose(!isSideBarClose); }}>
+                  <MenuFoldOutlined style={{ "display": "block" }} />
+                </div>
+              {/* </Tooltip> */}
+            </div>
+            <div className="sidebar-content">
+              content
+              {/* <div style={{"height":"10000px"}}>1111111</div> */}
+            </div>
+            <div className="sidebar-bottom">bottom</div>
+          </div>
+        </div>
       </div>
+
       <div
         className="right"
       >
-        <button className="button-left-close" onClick={() => { setIsLeftClose(!isLeftClose); }}>
+        <button className="button-sidebar-close" onClick={() => { setIsSideBarClose(!isSideBarClose); }}>
           按钮
         </button>
-        <button className="button-left-open" onClick={() => { setIsLeftOpen(!isLeftOpen); }}>
+        <button className="button-sidebar-open" onClick={() => { setIsSideBarOpen(!isSideBarOpen); }}>
           按钮
         </button>
       </div>
