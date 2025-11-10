@@ -22,20 +22,25 @@ const Bottom = ({ children }: { children?: React.ReactNode }) => {
   );
 }
 export { Top, Content, Bottom };
-
+// 下一步目标
+// 1. 增加侧边栏收起展开关闭按钮，都由部件外部控制
+// 2. 增加侧边栏最小宽度和最大宽度配置
+// 3. 修改一些部件和变量的命名
+// 4？. 增加侧边栏位置控制，左侧右侧
 function SideBar({
   children,
   sidebarType = "悬浮",
-  sidebarHiddenAuto = true
+  sidebarHiddenAuto = true,
+  isHeiMo = false
 }: {
   children?: React.ReactNode,
   sidebarType?: string,
-  sidebarHiddenAuto?: boolean
+  sidebarHiddenAuto?: boolean,
+  isHeiMo?: boolean
 }) {
   const SIDEBAR_MIN_WIDTH = 200;
   const SIDEBAR_MAX_WIDTH = 1000;
   const [isSideBarHidden, setSideBarHidden] = useState(sidebarHiddenAuto?true:false);
-  const [isHeiMo, setHeiMo] = useState(true);
   const [sideBarWidth, setSideBarWidth] = useState(SIDEBAR_MIN_WIDTH);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const isDraggingRef = useRef(false);
