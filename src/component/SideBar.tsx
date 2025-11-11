@@ -5,6 +5,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined
 } from "@ant-design/icons";
+import { setTimeout } from "timers";
 
 const Top = ({ children }: { children?: React.ReactNode }) => {
   return (
@@ -23,33 +24,58 @@ const Bottom = ({ children }: { children?: React.ReactNode }) => {
 }
 export { Top, Content, Bottom };
 // 下一步目标
-// 1. 增加侧边栏收起展开关闭按钮，都由部件外部控制
+// 1. 增加侧边栏收起展开关闭按钮，都由部件外部控制 √
 // 2. 增加侧边栏最小宽度和最大宽度配置
-// 3. 修改一些部件和变量的命名
+// 3. 修改一些部件和变量的命名 √
 // 4？. 增加侧边栏位置控制，左侧右侧
 function SideBar({
   children,
-  sidebarType = "悬浮",
+  sidebarType = "fixed",
   sidebarHiddenAuto = true,
-  isHeiMo = false
+  isOverPlay = true,
+  isSideBarHidden = false,
+  setSideBarHidden,
+  SIDEBAR_MIN_WIDTH = 200,
+  SIDEBAR_MAX_WIDTH = 1000,
 }: {
   children?: React.ReactNode,
   sidebarType?: string,
   sidebarHiddenAuto?: boolean,
-  isHeiMo?: boolean
+  isOverPlay?: boolean,
+  isSideBarHidden?: boolean,
+  setSideBarHidden?: Function,
+  SIDEBAR_MIN_WIDTH?: number,
+  SIDEBAR_MAX_WIDTH?: number
 }) {
-  const SIDEBAR_MIN_WIDTH = 200;
-  const SIDEBAR_MAX_WIDTH = 1000;
-  const [isSideBarHidden, setSideBarHidden] = useState(sidebarHiddenAuto?true:false);
+
+  // const [isSideBarHidden, setSideBarHidden] = useState(sidebarHiddenAuto?true:false);
   const [sideBarWidth, setSideBarWidth] = useState(SIDEBAR_MIN_WIDTH);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLDivElement | null>(null);
   const isDraggingRef = useRef(false);
+
   const handleMouseEnter = ()=>{
+    if (!isSideBarHidden) return;
+    if(!setSideBarHidden)return;
     setSideBarHidden(false);
+    const handleMouseLeave = (ev: MouseEvent)=>{
+      if (!triggerRef.current) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+      let isInside = true;
+      if(ev.clientY < rect.top || ev.clientY > rect.bottom)isInside = false;
+      if(ev.clientX < rect.left || ev.clientX > rect.right)isInside = false;
+      if(isInside) return;
+      setSideBarHidden(true);
+      document.removeEventListener('pointerout', handleMouseLeave);
+    }
+    document.addEventListener('pointerout', handleMouseLeave);
   }
-  const handleMouseLeave = ()=>{
+
+  const handelOverPlayMouseDown = ()=>{
+    if(!setSideBarHidden)return;
     setSideBarHidden(true);
   }
+
   const handleMouseDown = () => {
     if (isDraggingRef.current) return;
     isDraggingRef.current = true;
@@ -92,22 +118,22 @@ function SideBar({
   });
   return (
     <>
-      {sidebarType === "悬浮" && sidebarHiddenAuto && <div
+      {sidebarType === "float" && sidebarHiddenAuto && 
+        <div
+        ref = {triggerRef}
         className="sidebar-trigger"
         style={{
           '--sidebar-width': sideBarWidth + 'px',
         } as React.CSSProperties}
         onMouseEnter={handleMouseEnter}
-        
         />}
-      {sidebarType === "悬浮" && isHeiMo && !isSideBarHidden && <div className="overplay"/>}
+      {sidebarType === "float" && isOverPlay && !isSideBarHidden && <div className="overplay" onClick={handelOverPlayMouseDown} />}
       <div
-      onMouseLeave={handleMouseLeave}
         ref={sidebarRef}
         className={`
             sidebar
-            ${sidebarType === "悬浮" ? "sidebar-xuanfu" : ""}
-            ${sidebarType === "固定" ? "sidebar-guding" : ""}
+            ${sidebarType === "float" ? "sidebar-float" : ""}
+            ${sidebarType === "fixed" ? "sidebar-fixed" : ""}
             ${isSideBarHidden ? "sidebar-close" : "sidebar-open"}
             `}
         style={{
@@ -116,7 +142,6 @@ function SideBar({
         } as React.CSSProperties
         }
       >
-        <div className="overlay" />
         <div
           className="sider"
           onMouseDown={handleMouseDown}

@@ -12,19 +12,21 @@
 
 .left{
     width:auto;
+    flex-shrink: 0;
 }
 
 .right {
     flex: 1;
-    /* background-color: navy; */
+    /* display: flex; */
+    /* align-items: flex-end; */
+    /* justify-content: right; 水平居中 */
+    /* align-items: center;     垂直居中 */
 }
 
-.button-sidebar-open {
-    display: none;
-}
-
-.button-sidebar-close {
-    display: block;
+.switch{
+    position: fixed;
+    right: 0;
+    top: 0;
 }
 
 /* @container (max-width: 600px) {

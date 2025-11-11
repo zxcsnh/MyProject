@@ -1,5 +1,3 @@
-.sidebar-xuanfu,
-.sidebar-guding,
 .sidebar {
     height: 100dvh;
     height: 100vh;
@@ -7,7 +5,6 @@
     min-width: var(--sidebar-min-width);
     position: relative;
     background: #ffffff;
-    transition: transform 0.3s ease; /* 添加宽度的过渡效果 */
 
     /* 实现拖拽效果的透明边框 */
     .sider {
@@ -25,16 +22,21 @@
 }
 
 .sidebar-close {
-    /* width: 0;
-    min-width: 0; */
-    transform: translateX(-100%);  /* 隐藏侧边栏时将其移出屏幕 */
-    transition: transform 0.3s ease; /* 确保关闭时宽度的过渡 */
+    position: fixed;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
     .sider {
         display: none;
     }
 }
 
-.sidebar-xuanfu {
+.sidebar-open {
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+}
+
+.sidebar-float {
     position: fixed;
     z-index: 102;
 
@@ -46,20 +48,10 @@
         position: relative;
         z-index: 101;
     }
-
-    .sidebar-close {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease; /* 同时过渡 transform 和 width */
-    }
-
-    .sidebar-open {
-        transform: translateX(0);
-        transition: transform 0.3s ease; /* 同时过渡 transform 和 width */
-    }
 }
 
 .sidebar-trigger {
-    z-index: 102;
+    z-index: 101;
     position: fixed;
     left: 0;
     top: 0;
@@ -76,6 +68,8 @@
     bottom: 0;
     z-index: 100;
     background-color: rgba(128, 128, 128, 0.2);
+    /* opacity: 0;
+    transition: opacity 0.3s ease; */
 }
 
 .icon-sidebar-close {
