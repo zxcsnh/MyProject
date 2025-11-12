@@ -23,7 +23,7 @@
 
 .sidebar-close {
     position: fixed;
-    transform: translateX(-100%);
+    transform: translateX(-101%);
     transition: transform 0.3s ease;
 
     .sider {
@@ -68,21 +68,6 @@
     bottom: 0;
     z-index: 100;
     background-color: rgba(128, 128, 128, 0.2);
-    /* opacity: 0;
-    transition: opacity 0.3s ease; */
-}
-
-.icon-sidebar-close {
-    font-size: 20px;
-    border-radius: 10%;
-    padding: 8px;
-}
-
-.icon-sidebar-close:hover {
-    cursor: ew-resize;
-    user-select: none;
-    background: rgba(128, 128, 128, 0.2);
-    display: inherit;
 }
 
 .sidebar-container {

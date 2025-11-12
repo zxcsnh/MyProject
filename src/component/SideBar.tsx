@@ -1,10 +1,6 @@
 "use client";
 import "./SideBar.css"
 import React, { useState, useRef } from "react";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined
-} from "@ant-design/icons";
 import { setTimeout } from "timers";
 
 const Top = ({ children }: { children?: React.ReactNode }) => {
@@ -25,7 +21,7 @@ const Bottom = ({ children }: { children?: React.ReactNode }) => {
 export { Top, Content, Bottom };
 // 下一步目标
 // 1. 增加侧边栏收起展开关闭按钮，都由部件外部控制 √
-// 2. 增加侧边栏最小宽度和最大宽度配置
+// 2. 增加侧边栏最小宽度和最大宽度配置 √
 // 3. 修改一些部件和变量的命名 √
 // 4？. 增加侧边栏位置控制，左侧右侧
 function SideBar({
@@ -48,31 +44,30 @@ function SideBar({
   SIDEBAR_MAX_WIDTH?: number
 }) {
 
-  // const [isSideBarHidden, setSideBarHidden] = useState(sidebarHiddenAuto?true:false);
   const [sideBarWidth, setSideBarWidth] = useState(SIDEBAR_MIN_WIDTH);
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const isDraggingRef = useRef(false);
 
-  const handleMouseEnter = ()=>{
+  const handleMouseEnter = () => {
     if (!isSideBarHidden) return;
-    if(!setSideBarHidden)return;
+    if (!setSideBarHidden) return;
     setSideBarHidden(false);
-    const handleMouseLeave = (ev: MouseEvent)=>{
+    const handleMouseLeave = (ev: MouseEvent) => {
       if (!triggerRef.current) return;
       const rect = triggerRef.current.getBoundingClientRect();
       let isInside = true;
-      if(ev.clientY < rect.top || ev.clientY > rect.bottom)isInside = false;
-      if(ev.clientX < rect.left || ev.clientX > rect.right)isInside = false;
-      if(isInside) return;
+      if (ev.clientY < rect.top || ev.clientY > rect.bottom) isInside = false;
+      if (ev.clientX < rect.left || ev.clientX > rect.right) isInside = false;
+      if (isInside) return;
       setSideBarHidden(true);
       document.removeEventListener('pointerout', handleMouseLeave);
     }
     document.addEventListener('pointerout', handleMouseLeave);
   }
 
-  const handelOverPlayMouseDown = ()=>{
-    if(!setSideBarHidden)return;
+  const handelOverPlayMouseDown = () => {
+    if (!setSideBarHidden) return;
     setSideBarHidden(true);
   }
 
@@ -118,16 +113,17 @@ function SideBar({
   });
   return (
     <>
-      {sidebarType === "float" && sidebarHiddenAuto && 
+      {sidebarType === "float" && sidebarHiddenAuto &&
         <div
-        ref = {triggerRef}
-        className="sidebar-trigger"
-        style={{
-          '--sidebar-width': sideBarWidth + 'px',
-        } as React.CSSProperties}
-        onMouseEnter={handleMouseEnter}
+          ref={triggerRef}
+          className="sidebar-trigger"
+          style={{
+            '--sidebar-width': sideBarWidth + 'px',
+          } as React.CSSProperties}
+          onMouseEnter={handleMouseEnter}
         />}
-      {sidebarType === "float" && isOverPlay && !isSideBarHidden && <div className="overplay" onClick={handelOverPlayMouseDown} />}
+      {sidebarType === "float" && isOverPlay && !isSideBarHidden &&
+        <div className="overplay" onClick={handelOverPlayMouseDown} />}
       <div
         ref={sidebarRef}
         className={`
