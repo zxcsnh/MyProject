@@ -1,5 +1,7 @@
 import "./globals.css";
-
+import theme from "@/theme/theme"
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -8,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
-        {children}
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </body>
     </html>
   );

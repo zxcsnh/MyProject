@@ -30,14 +30,6 @@
     top: 0;
 }
 
-.settings{
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    transform: translateX(100%);
-    z-index:1000;
-    background-color: brown;
-}
 /* @container (max-width: 600px) {
     .sidebar {
         width: 0;

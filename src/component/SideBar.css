@@ -1,109 +1,109 @@
 .sidebar {
-    height: 100dvh;
-    height: 100vh;
-    width: var(--sidebar-width);
-    min-width: var(--sidebar-min-width);
-    position: relative;
-    background: #ffffff;
+  height: 100dvh;
+  height: 100vh;
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-min-width);
+  position: relative;
+  /* background: #ffffff; */
 
-    /* 实现拖拽效果的透明边框 */
-    .sider {
-        width: 10px;
-        height: 100%;
-        position: absolute;
-        opacity: 0;
-        right: 0;
-        transform: translateX(50%);
-    }
+  /* 实现拖拽效果的透明边框 */
+  .sider {
+    width: 10px;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    transform: translateX(50%);
+  }
 
-    .sider:hover {
-        cursor: ew-resize;
-    }
+  .sider:hover {
+    cursor: ew-resize;
+  }
 }
 
 .sidebar-close {
-    position: fixed;
-    transform: translateX(-101%);
-    transition: transform 0.3s ease;
+  position: fixed;
+  transform: translateX(-101%);
+  transition: transform 0.3s ease;
 
-    .sider {
-        display: none;
-    }
+  .sider {
+    display: none;
+  }
 }
 
 .sidebar-open {
-    transform: translateX(0);
-    transition: transform 0.3s ease;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 }
 
 .sidebar-float {
-    position: fixed;
-    z-index: 102;
+  position: fixed;
+  z-index: 102;
 
-    .sider {
-        display: none;
-    }
+  .sider {
+    display: none;
+  }
 
-    .sidebar-container {
-        position: relative;
-        z-index: 101;
-    }
+  .sidebar-container {
+    position: relative;
+    z-index: 101;
+  }
 }
 
 .sidebar-trigger {
-    z-index: 101;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: var(--sidebar-width);
-    opacity: 0;
+  z-index: 101;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  opacity: 0;
 }
 
 .overplay {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
-    background-color: rgba(128, 128, 128, 0.2);
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  background-color: rgba(128, 128, 128, 0.2);
 }
 
 .sidebar-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: inherit;
-    box-shadow: 4px 0 4px rgba(0, 0, 0, 0.2);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 4px 0 4px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-top {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    background: inherit;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 .sidebar-content {
-    flex: 1;
-    width: 100%;
-    z-index: 0;
+  flex: 1;
+  width: 100%;
+  z-index: 0;
 }
 
 .sidebar-bottom {
-    width: 100%;
-    position: sticky;
-    bottom: 0;
-    box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    background: inherit;
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.popup {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translateX(100%);
 }
