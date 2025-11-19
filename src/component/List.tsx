@@ -33,12 +33,14 @@ function ListItem({
   item = null,
   allUnFold = false,
   selectedUrl = "",
+  padding = 0,
 }: {
   text?: string;
   url?: string | null;
   item?: Array<object> | null;
   allUnFold?: boolean;
   selectedUrl?: string;
+  padding?: number;
 }) {
   if (item === null) {
     const onClick = () => {
@@ -48,6 +50,7 @@ function ListItem({
       <div
         onClick={onClick}
         className={(url === selectedUrl ? "select " : "") + "listItem"}
+        style={padding === 0 ? {} : { paddingLeft: padding * 20 + "px" }}
       >
         {text}
       </div>
@@ -64,9 +67,17 @@ function ListItem({
   };
   return (
     <>
-      <div onClick={onClick} className="listItem">
+      <div
+        onClick={onClick}
+        className="listItem"
+        style={padding === 0 ? {} : { paddingLeft: padding * 20 + "px" }}
+      >
         <div>{text}</div>
-        {isUnFold ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        {isUnFold ? (
+          <KeyboardArrowUp color="primary" />
+        ) : (
+          <KeyboardArrowDown color="primary" />
+        )}
       </div>
       <div style={isUnFold ? {} : { display: "none" }}>
         {item?.map((it, index) => {
@@ -76,6 +87,7 @@ function ListItem({
               allUnFold={allUnFold}
               key={index}
               {...getFromList(it)}
+              padding={padding + 1}
             />
           );
         })}
