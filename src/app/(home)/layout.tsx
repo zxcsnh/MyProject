@@ -4,11 +4,8 @@ import { useState } from "react";
 import SideBar, { Top, Content, Bottom, Popup } from "@/component/SideBar";
 import List from "@/component/List";
 import { IconButton, Tooltip, Box, Paper, Switch, FormControlLabel } from "@mui/material";
-import { Settings, KeyboardArrowLeft } from "@mui/icons-material";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-
+import { Settings, KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import { SIDEBAR_NAV_LIST } from "../../config/navData";
 function HomeLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   // 常数
   const SIDEBAR_MIN_WIDTH = 200;
@@ -20,32 +17,6 @@ function HomeLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const [allUnFold, setAllUnFold] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState("home");
   const [settingsShow, setSettingsShow] = useState(false);
-  const list = [
-    {
-      text: "list-1",
-      url: "home",
-    },
-    {
-      text: "list-2",
-      url: "",
-      item: [
-        {
-          text: "list-2-1",
-          url: "",
-        },
-        {
-          text: "list-2-2",
-          url: "",
-          item: [
-            {
-              text: "list-2-2-1",
-              url: "",
-            },
-          ],
-        },
-      ],
-    },
-  ];
   const handleSettingsOnClick = () => {
     if (settingsShow) {
       return;
@@ -61,182 +32,176 @@ function HomeLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     }
   };
   return (
-    <div className="container">
-      <div className="left">
-        <SideBar
-          sidebarType={sideBarType}
-          sidebarHiddenAuto={isSideBarHiddenAuto}
-          isOverPlay={isSideBarOverplay}
-          isSideBarHidden={isSideBarHidden}
-          setSideBarHidden={setSideBarHidden}
-          SIDEBAR_MIN_WIDTH={SIDEBAR_MIN_WIDTH}
-          SIDEBAR_MAX_WIDTH={SIDEBAR_MAX_WIDTH}
-          popupShow={settingsShow}
-          setPopupShow={setSettingsShow}
-        >
-          <Popup>
-            <Paper>
+    <Box sx={{ display: "flex", height: "100%" }}>
+      <Box sx={{ flexShrink: 0, position: "relative" }}>
+        <Box sx={{ backgroundColor: "background.paper" }}>
+          {isSideBarHidden && (
+            <Box
+              sx={{
+                position: "fixed",
+                top: "50%",
+                left: 1,
+                transform: "translatey(-50%)",
+              }}
+            >
               <Box
                 sx={{
+                  backgroundColor: "primary.dark",
+                  color: "primary.dark",
                   display: "flex",
-                  flexDirection: "column",
+                  justifyContent: "center",
                   alignItems: "center",
+                  borderRadius: "25%",
+                  maxWidth: "4px",
+                  overflow: "hidden",
+                  cursor: "pointer",
+                  transition:
+                    "max-width 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease",
+                  "&:hover": {
+                    maxWidth: "200px",
+                    borderRadius: "50%",
+                    backgroundColor: "primary.light",
+                    color: "primary.main",
+                  },
                 }}
               >
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={sideBarType === "fixed"}
-                      onChange={handleSwitchSideBarType}
-                    />
-                  }
-                  label="固定模式"
-                  labelPlacement="start" // start / top / bottom / end
-                />
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={sideBarType === "float"}
-                      onChange={handleSwitchSideBarType}
-                    />
-                  }
-                  label="悬浮模式"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={sideBarType === "fixed"}
-                      checked={isSideBarHiddenAuto}
-                      onChange={() => {
-                        setSideBarHiddenAuto(!isSideBarHiddenAuto);
-                      }}
-                    />
-                  }
-                  label="自动隐藏"
-                  labelPlacement="start"
-                />
-
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={sideBarType === "fixed"}
-                      checked={isSideBarOverplay}
-                      onChange={() => {
-                        setSideBarOverplay(!isSideBarOverplay);
-                      }}
-                    />
-                  }
-                  label="黑幕"
-                  labelPlacement="start"
-                />
-              </Box>
-            </Paper>
-          </Popup>
-          <Top>
-            <Paper
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <div className="title">这是标题</div>
-              <Tooltip title="关闭侧边栏" arrow>
                 <IconButton
-                  color="primary"
+                  sx={{ color: "inherit" }}
                   onClick={() => {
-                    setSideBarHidden(true);
+                    setSideBarHidden(false);
                   }}
-                  size="medium"
                 >
-                  <KeyboardArrowLeft />
+                  <KeyboardArrowRight fontSize="large" />
                 </IconButton>
-              </Tooltip>
-            </Paper>
-          </Top>
-          <Content>
-            <Paper>
-              <List list={list} allUnFold={allUnFold} selectedUrl={selectedUrl}></List>
-            </Paper>
-          </Content>
-          <Bottom>
-            <Paper
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Tooltip title="设置" arrow>
-                <IconButton size="medium" onPointerUp={handleSettingsOnClick}>
-                  <Settings />
-                </IconButton>
-              </Tooltip>
-            </Paper>
-          </Bottom>
-        </SideBar>
-      </div>
+              </Box>
+            </Box>
+          )}
+          <SideBar
+            sidebarType={sideBarType}
+            sidebarHiddenAuto={isSideBarHiddenAuto}
+            isOverPlay={isSideBarOverplay}
+            isSideBarHidden={isSideBarHidden}
+            setSideBarHidden={setSideBarHidden}
+            SIDEBAR_MIN_WIDTH={SIDEBAR_MIN_WIDTH}
+            SIDEBAR_MAX_WIDTH={SIDEBAR_MAX_WIDTH}
+            popupShow={settingsShow}
+            setPopupShow={setSettingsShow}
+          >
+            <Popup>
+              <Paper>
+                <Box
+                  sx={{
+                    p: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={sideBarType === "fixed"}
+                        onChange={handleSwitchSideBarType}
+                      />
+                    }
+                    label="固定模式"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={sideBarType === "float"}
+                        onChange={handleSwitchSideBarType}
+                      />
+                    }
+                    label="悬浮模式"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        disabled={sideBarType === "fixed"}
+                        checked={isSideBarHiddenAuto}
+                        onChange={() => {
+                          setSideBarHiddenAuto(!isSideBarHiddenAuto);
+                        }}
+                      />
+                    }
+                    label="自动隐藏"
+                    labelPlacement="start"
+                  />
 
-      <div className="right">
-        <>测试内容</>
-        <div className="switch">
-          <button
-            onClick={() => {
-              setSideBarHidden(false);
-            }}
-          >
-            开启侧边栏
-          </button>
-          <button
-            onClick={() => {
-              setSideBarHidden(true);
-            }}
-          >
-            关闭侧边栏
-          </button>
-          <button
-            onClick={() => {
-              setSideBarType("fixed");
-            }}
-          >
-            固定模式
-          </button>
-          <button
-            onClick={() => {
-              setSideBarType("float");
-            }}
-          >
-            悬浮模式
-          </button>
-          <button
-            onClick={() => {
-              setSideBarHiddenAuto(!isSideBarHiddenAuto);
-            }}
-          >
-            自动隐藏
-          </button>
-          <button
-            onClick={() => {
-              setSideBarOverplay(!isSideBarOverplay);
-            }}
-          >
-            黑幕
-          </button>
-          <button
-            onClick={() => {
-              setAllUnFold(!allUnFold);
-              console.log(allUnFold, "push");
-            }}
-          >
-            展开全部
-          </button>
-        </div>
-      </div>
-      {/* {children} */}
-    </div>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        disabled={sideBarType === "fixed"}
+                        checked={isSideBarOverplay}
+                        onChange={() => {
+                          setSideBarOverplay(!isSideBarOverplay);
+                        }}
+                      />
+                    }
+                    label="黑幕"
+                    labelPlacement="start"
+                  />
+                </Box>
+              </Paper>
+            </Popup>
+            <Top>
+              <Paper
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className="title">这是标题</div>
+                <Tooltip title="关闭侧边栏" arrow>
+                  <IconButton
+                    color="primary"
+                    onClick={() => {
+                      setSideBarHidden(true);
+                    }}
+                    size="medium"
+                  >
+                    <KeyboardArrowLeft />
+                  </IconButton>
+                </Tooltip>
+              </Paper>
+            </Top>
+            <Content>
+              <Paper sx={{ height: "100%" }}>
+                <List
+                  list={SIDEBAR_NAV_LIST}
+                  allUnFold={allUnFold}
+                  selectedUrl={selectedUrl}
+                ></List>
+              </Paper>
+            </Content>
+            <Bottom>
+              <Paper
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Tooltip title="设置" arrow>
+                  <IconButton size="medium" onPointerUp={handleSettingsOnClick}>
+                    <Settings />
+                  </IconButton>
+                </Tooltip>
+              </Paper>
+            </Bottom>
+          </SideBar>
+        </Box>
+      </Box>
+
+      <Box sx={{flex:1}}>
+        {children}
+      </Box>
+    </Box>
   );
 }
 

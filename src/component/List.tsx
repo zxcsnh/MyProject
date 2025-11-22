@@ -1,59 +1,69 @@
 import { useEffect, useState } from "react";
-import "./List.css";
-
+import { Box } from "@mui/material";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
-type ListItem = {
-  text: string;
-  url?: string | null;
-  item?: Array<object> | null;
-};
-
-function getFromList(list: unknown): ListItem {
-  // 使用类型保护，避免直接访问未知类型属性时报错
-  if (typeof list === "object" && list !== null) {
-    const l = list as Record<string, any>;
-    return {
-      text: typeof l.text === "string" ? l.text : "",
-      url: typeof l.url === "string" ? l.url : null,
-      item: typeof l.item === "object" && l.item !== null ? l.item : null,
-    };
-  }
-
-  // 如果传入不是对象，返回默认值
-  return {
-    text: "",
-    url: null,
-    item: null,
-  };
+import { NavItem } from "@/types/nav";
+function Item({ text = "" }: { text: string }) {
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          width: "1px",
+          height: "100%",
+          left: "-10px",
+          backgroundColor: "text.secondary",
+        },
+      }}
+    >
+      {text}
+    </Box>
+  );
 }
-
 function ListItem({
-  text = "",
-  url = null,
   item = null,
   allUnFold = false,
   selectedUrl = "",
   padding = 0,
 }: {
-  text?: string;
-  url?: string | null;
-  item?: Array<object> | null;
+  item?: NavItem | null;
   allUnFold?: boolean;
   selectedUrl?: string;
   padding?: number;
 }) {
-  if (item === null) {
+  if(!item)return;
+  if (!item.item) {
     const onClick = () => {
-      console.log(url);
+      console.log(item.url);
     };
     return (
-      <div
+      <Box
         onClick={onClick}
-        className={(url === selectedUrl ? "select " : "") + "listItem"}
-        style={padding === 0 ? {} : { paddingLeft: padding * 20 + "px" }}
+        sx={{
+          ...(padding !== 0 && { paddingLeft: padding * 20 + "px" }),
+          ...(item.url === selectedUrl && {
+            backgroundColor: "primary.light",
+            color:"primary.dark"
+          }),
+          position: "relative",
+          overflow: "hidden",
+          "&:hover": {
+            "&::before": {
+              content: '" "',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "action.hover",
+            },
+            cursor: "pointer",
+          },
+        }}
       >
-        {text}
-      </div>
+        <Item text={item.text}></Item>
+      </Box>
     );
   }
   const [isUnFold, setUnFold] = useState(allUnFold);
@@ -67,31 +77,55 @@ function ListItem({
   };
   return (
     <>
-      <div
+      <Box
         onClick={onClick}
-        className="listItem"
-        style={padding === 0 ? {} : { paddingLeft: padding * 20 + "px" }}
+        sx={{
+          ...(padding !== 0 && { paddingLeft: padding * 20 + "px" }),
+          ...(item.url === selectedUrl && {
+            backgroundColor: "primary.light",
+            color:"primary.dark"
+          }),
+          position: "relative",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          "&:hover": {
+            "&::before": {
+              content: '" "',
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "action.hover",
+              opacity: 0.6,
+            },
+            cursor: "pointer",
+          },
+        }}
       >
-        <div>{text}</div>
+        <Item text={item.text}></Item>
         {isUnFold ? (
           <KeyboardArrowUp color="primary" />
         ) : (
           <KeyboardArrowDown color="primary" />
         )}
-      </div>
-      <div style={isUnFold ? {} : { display: "none" }}>
-        {item?.map((it, index) => {
+      </Box>
+      <Box sx={isUnFold ? {} : { display: "none" }}>
+        {item.item?.map((it, index) => {
           return (
             <ListItem
               selectedUrl={selectedUrl}
               allUnFold={allUnFold}
               key={index}
-              {...getFromList(it)}
+              item={it}
               padding={padding + 1}
             />
           );
         })}
-      </div>
+      </Box>
     </>
   );
 }
@@ -100,7 +134,7 @@ function List({
   allUnFold = false,
   selectedUrl = "",
 }: {
-  list: Array<object>;
+  list: Array<NavItem>;
   allUnFold?: boolean;
   selectedUrl?: string;
 }) {
@@ -112,7 +146,7 @@ function List({
             selectedUrl={selectedUrl}
             allUnFold={allUnFold}
             key={index}
-            {...getFromList(item)}
+            item={item}
           />
         );
       })}
