@@ -20,7 +20,7 @@ export const SIDEBAR_NAV_LIST: NavItem[] = [
         item: [
           {
             text: "list-2-2-1",
-            url: "",
+            url: "home2",
           },
         ],
       },

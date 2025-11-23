@@ -1,5 +1,5 @@
 "use client";
-import "./layout.css";
+
 import { useState } from "react";
 import SideBar, { Top, Content, Bottom, Popup } from "@/component/SideBar";
 import List from "@/component/List";
@@ -14,8 +14,8 @@ function HomeLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const [sideBarType, setSideBarType] = useState("fixed");
   const [isSideBarHiddenAuto, setSideBarHiddenAuto] = useState(false);
   const [isSideBarOverplay, setSideBarOverplay] = useState(false);
-  const [allUnFold, setAllUnFold] = useState(false);
-  const [selectedUrl, setSelectedUrl] = useState("home");
+  const [allUnFold, setAllUnFold] = useState(null);
+  const [selectedUrl, setSelectedUrl] = useState("home2");
   const [settingsShow, setSettingsShow] = useState(false);
   const handleSettingsOnClick = () => {
     if (settingsShow) {
