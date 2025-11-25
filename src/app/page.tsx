@@ -4,6 +4,8 @@ import {
   Box,
   Paper,
   Card,
+  CardHeader,
+  CardContent,
   useTheme,
   autocompleteClasses,
   Avatar,
@@ -11,6 +13,7 @@ import {
   ButtonGroup,
   Button,
   Stack,
+  Typography,
 } from "@mui/material";
 import { ReactNode } from "react";
 import { alpha } from "@mui/material/styles";
@@ -19,8 +22,14 @@ import {
   Height,
   KeyboardArrowDown,
   Translate,
+  Lightbulb,
+  KeyboardDoubleArrowDown,
 } from "@mui/icons-material";
 import TopCard from "./topCard";
+import ToolCard from "./toolCard";
+import TypeWriter from "./typeWriter";
+import { Theme } from "@mui/material/styles";
+import { keyframes } from "@emotion/react";
 
 function BackgroundBox({ children }: { children: ReactNode }) {
   const theme = useTheme();
@@ -51,43 +60,59 @@ function BackgroundBox({ children }: { children: ReactNode }) {
     </Box>
   );
 }
-function ShowCard() {
-  return (
-    <Paper
-      sx={{
-        height: "150px",
-        width: "600px",
-        transition: "transform 0.3s ease",
-        "&:hover": {
-          transform: "translateY(-5px)",
-          boxShadow: (theme)=>`
-            0 8px 16px ${theme.palette.primary.light} /* 主题色发光效果 */
-          `,
-        },
-      }}
-    >
-      1111
-    </Paper>
-  );
-}
+const upAndDown = keyframes`
+  0%, 100% { 
+    transform: translate(0,-25%); 
+  }
+  50% { 
+    transform: translate(0, 0); 
+  }
+`;
+
 export default function Home() {
   return (
     <BackgroundBox>
+      {/* 浮动菜单栏 */}
       <TopCard />
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <Paper sx={{ height: "200px", width: "800px", p: 4 }}>
-          {" "}
-          <Stack
-            direction="row" // 设置为水平排列 (row)
-            spacing={2} // 控制子元素之间的间隔 (theme.spacing(2))
-            alignItems="center"
-            justifyContent="center"
-          >
-            <ShowCard></ShowCard>
-            <ShowCard></ShowCard>
-            <ShowCard></ShowCard>
-          </Stack>
-        </Paper>
+      {/* first View */}
+      <Box
+        sx={{
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <TypeWriter />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            animation: `${upAndDown} 1.5s ease-in-out infinite`,
+            color:"primary.main"
+          }}
+          fontSize={48}
+        >
+          <KeyboardDoubleArrowDown fontSize="inherit"/>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          px: {
+            xs: 1,
+            sm: 4,
+            md: 8,
+          },
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          //
+          height: "100vh",
+        }}
+      >
+        <ToolCard />
       </Box>
     </BackgroundBox>
   );

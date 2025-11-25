@@ -14,6 +14,7 @@ import {
   Theme,
   ListItem,
   List,
+  Typography,
 } from "@mui/material";
 
 import { FavoriteBorder, KeyboardArrowDown } from "@mui/icons-material";
@@ -47,33 +48,40 @@ export default function TopCard() {
   return (
     <Box
       sx={{
-        position: "sticky",
+        position: "fixed",
         top: 0,
-        // zIndex: 1100,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        zIndex: 1100,
         boxSizing: "border-box", // 设置后，width 现在包括了 padding 和 border
         width: "100%", // 占据全部宽度
         p: 2,
       }}
     >
-      <Card
+      <Paper
         sx={{
+          maxWidth: {
+            xs: "100%",
+            sm: 500,
+            md: 700,
+          },
+          mx: "auto",
           px: 2,
           py: 1,
-          borderRadius: (theme) => theme.shape.borderRadius,
+          borderRadius: "16px",
           backgroundColor: (theme) => theme.palette.background.paper,
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          gap: 3,
+          gap: {
+            xs: 1,
+            sm: 3,
+          },
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
           <Box
             sx={{
+              flex: 1,
               width: 100,
               height: 50,
             }}
@@ -90,20 +98,28 @@ export default function TopCard() {
           </Box>
           <Divider orientation="vertical" variant="middle" flexItem sx={{ margin: 1 }} />
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Box
+            <Typography
+              variant="h5"
+              noWrap
               sx={{
-                fontSize: 24,
                 fontStyle: "italic",
                 fontWeight: "bold",
-                whiteSpace: "nowrap",
               }}
             >
               Neo's Blog
-            </Box>
-            <Box sx={{ fontSize: 16 }}>Hello World</Box>
+            </Typography>
+            <Typography variant="subtitle1" noWrap>
+              Hello World
+            </Typography>
           </Box>
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", whiteSpace: "nowrap" }}>
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            flexDirection: "row",
+            whiteSpace: "nowrap",
+          }}
+        >
           <TopCardButton>博客动态</TopCardButton>
           <TopCardButton>找到我</TopCardButton>
         </Box>
@@ -113,13 +129,15 @@ export default function TopCard() {
             size="large"
             variant="contained"
             color="primary"
-            startIcon={<FavoriteBorder />}
-            sx={{ borderRadius: "12px" }}
+            sx={{ borderRadius: "12px", p: { xs: 1, sm: 2 } }}
           >
-            一个按钮
+            <FavoriteBorder />
+            <Box component="span" sx={{ pl: 1, display: { xs: "none", sm: "block" } }}>
+              一个按钮
+            </Box>
           </Button>
         </Box>
-      </Card>
+      </Paper>
     </Box>
   );
 }

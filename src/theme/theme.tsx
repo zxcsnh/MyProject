@@ -9,11 +9,14 @@ const theme = createTheme({
             light: blue[100],
             dark: blue[800]
         },
-        secondary: grey,
+        secondary: {
+            main: "#FE6B8B",
+            light:"#FF8E53",
+        },
 
         background: {
-            default: '#ffffff',
-            paper: '#f2f2f2ff',
+            default: '#fafafaff',
+            paper: '#ffffff',
         },
         action: {
             active: blue[500],
