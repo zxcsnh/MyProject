@@ -51,7 +51,7 @@ function SideBar({
   const isDraggingRef = useRef(false);
 
   useEffect(() => {
-    console.log("popup,",popupShow);
+    console.log("popup,", popupShow);
     const handlePopopMouseUp = (ev: PointerEvent) => {
       if (!popupRef.current) return;
       if (popupRef.current.contains(ev.target as Node)) return;
@@ -76,7 +76,7 @@ function SideBar({
 
       const flagContain = sidebarRef.current.contains(ev.relatedTarget as Node);
       if (flagContain) return;
-      
+
       const rect = triggerRef.current.getBoundingClientRect();
       let isInside = true;
       if (ev.clientY < rect.top || ev.clientY > rect.bottom) isInside = false;
@@ -143,7 +143,7 @@ function SideBar({
       {sidebarType === "float" && sidebarHiddenAuto && (
         <div
           className="sidebar-trigger"
-          ref = {triggerRef}
+          ref={triggerRef}
           style={
             {
               "--sidebar-width": sideBarWidth + "px",

@@ -30,6 +30,7 @@ import ToolCard from "./toolCard";
 import TypeWriter from "./typeWriter";
 import { Theme } from "@mui/material/styles";
 import { keyframes } from "@emotion/react";
+import FirstView from "./firstView";
 
 function BackgroundBox({ children }: { children: ReactNode }) {
   const theme = useTheme();
@@ -60,14 +61,7 @@ function BackgroundBox({ children }: { children: ReactNode }) {
     </Box>
   );
 }
-const upAndDown = keyframes`
-  0%, 100% { 
-    transform: translate(0,-25%); 
-  }
-  50% { 
-    transform: translate(0, 0); 
-  }
-`;
+
 
 export default function Home() {
   return (
@@ -75,29 +69,7 @@ export default function Home() {
       {/* 浮动菜单栏 */}
       <TopCard />
       {/* first View */}
-      <Box
-        sx={{
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
-        <TypeWriter />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            animation: `${upAndDown} 1.5s ease-in-out infinite`,
-            color:"primary.main"
-          }}
-          fontSize={48}
-        >
-          <KeyboardDoubleArrowDown fontSize="inherit"/>
-        </Box>
-      </Box>
+      <FirstView></FirstView>
       <Box
         sx={{
           px: {

@@ -2,7 +2,6 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { keyframes } from "@emotion/react";
-import { Translate } from "@mui/icons-material";
 
 // 定义 CSS 闪烁动画
 const blink = keyframes`
