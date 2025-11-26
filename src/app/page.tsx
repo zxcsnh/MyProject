@@ -27,9 +27,6 @@ import {
 } from "@mui/icons-material";
 import TopCard from "./topCard";
 import ToolCard from "./toolCard";
-import TypeWriter from "./typeWriter";
-import { Theme } from "@mui/material/styles";
-import { keyframes } from "@emotion/react";
 import FirstView from "./firstView";
 
 function BackgroundBox({ children }: { children: ReactNode }) {
@@ -55,6 +52,7 @@ function BackgroundBox({ children }: { children: ReactNode }) {
         width: "100%",
         boxSizing: "border-box",
         minHeight: "100vh",
+        overflowY: "auto",
       }}
     >
       {children}
@@ -62,30 +60,32 @@ function BackgroundBox({ children }: { children: ReactNode }) {
   );
 }
 
-
 export default function Home() {
   return (
-    <BackgroundBox>
-      {/* 浮动菜单栏 */}
-      <TopCard />
+    <Box>
       {/* first View */}
       <FirstView></FirstView>
-      <Box
-        sx={{
-          px: {
-            xs: 1,
-            sm: 4,
-            md: 8,
-          },
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          //
-          height: "100vh",
-        }}
-      >
-        <ToolCard />
-      </Box>
-    </BackgroundBox>
+      <BackgroundBox>
+        {/* 浮动菜单栏 */}
+        <TopCard />
+        <Box
+          sx={{
+            pt: 16,
+            px: {
+              xs: 1,
+              sm: 4,
+              md: 8,
+            },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            //
+            minHeight: "100vh",
+          }}
+        >
+          <ToolCard />
+        </Box>
+      </BackgroundBox>
+    </Box>
   );
 }

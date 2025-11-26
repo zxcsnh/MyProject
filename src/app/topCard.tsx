@@ -104,11 +104,27 @@ export default function TopCard() {
               sx={{
                 fontStyle: "italic",
                 fontWeight: "bold",
+                background: (theme) =>
+                  `linear-gradient(45deg, ${theme.palette.secondary.main} 20%, ${theme.palette.secondary.light} 80%)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                textFillColor: "transparent",
+                overflow: "hidden",
               }}
             >
               Neo's Blog
             </Typography>
-            <Typography variant="subtitle1" noWrap>
+            <Typography
+              variant="subtitle1"
+              noWrap
+              sx={{
+                background: (theme) =>
+                  `linear-gradient(45deg, ${theme.palette.secondary.light} 20%, ${theme.palette.secondary.main} 80%)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               Hello World
             </Typography>
           </Box>

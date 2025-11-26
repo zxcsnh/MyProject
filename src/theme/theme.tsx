@@ -4,12 +4,12 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
     palette: {
-        primary: {
+        primary: { // 主色调
             main: blue[500],
             light: blue[100],
             dark: blue[800]
         },
-        secondary: {
+        secondary: { // 表示强调突出的色调
             main: "#FE6B8B",
             light:"#FF8E53",
         },

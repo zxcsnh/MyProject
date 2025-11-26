@@ -1,30 +1,8 @@
 "use client";
-import {
-  Box,
-  Paper,
-  Card,
-  CardHeader,
-  CardContent,
-  useTheme,
-  autocompleteClasses,
-  Avatar,
-  Divider,
-  ButtonGroup,
-  Button,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { ReactNode, useState, useEffect, useRef, useCallback } from "react";
-import { alpha } from "@mui/material/styles";
-import {
-  FavoriteBorder,
-  Height,
-  KeyboardArrowDown,
-  Translate,
-  Lightbulb,
-  KeyboardDoubleArrowDown,
-} from "@mui/icons-material";
-import TypeWriter from "./typeWriter";
+import { Box } from "@mui/material";
+import { ReactNode, useState, useRef, useCallback } from "react";
+import { KeyboardDoubleArrowDown } from "@mui/icons-material";
+import TypeWriter from "../component/typeWriter";
 import { keyframes } from "@emotion/react";
 const upAndDown = keyframes`
   0%, 100% { 
@@ -36,7 +14,6 @@ const upAndDown = keyframes`
 `;
 
 function FirstView() {
-  const [isShow, setShow] = useState(true);
   const [scroll, setScroll] = useState(0);
   const [pointerDown, setPointerDown] = useState(false);
   const [isTransfrom, setTransfrom] = useState(false);
@@ -44,39 +21,16 @@ function FirstView() {
   const viewRef = useRef<HTMLElement | null>(null);
   const scrollTimerRef = useRef<number | null>(null);
   const scrollDelta = useRef<number>(0);
+  const animationFrameRef = useRef<number | null>(null);
 
-  const execScroll = (time: number, height: number) => {
-    if (time <= 0) return;
-
-    const start = window.pageYOffset;
-    const change = height;
-    const duration = time;
-    let startTime: number | null = null;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      // 使用缓动函数
-      const easeProgress =
-        progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
-
-      window.scrollTo(0, start + change * easeProgress);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    requestAnimationFrame(animate);
+  const closeFirstView = () => {
+    if (!viewRef.current) return;
+    const height = viewRef.current.scrollHeight;
+    setScroll(height);
+    document.body.style.overflow = "auto";
   };
 
-  const SCROLL_END_DELAY = 100; // 毫秒，可以根据需要调整
   const handleWheel = useCallback((e: React.WheelEvent) => {
-    if (!isTransfrom) {
-      setTransfrom(true);
-    }
     // 清除之前的计时器
     if (scrollTimerRef.current !== null) {
       clearTimeout(scrollTimerRef.current);
@@ -84,77 +38,93 @@ function FirstView() {
 
     // 滚动逻辑
     scrollDelta.current += e.deltaY;
-    setScroll(scrollDelta.current);
-    if (!viewRef.current) return;
-    const height = viewRef.current.scrollHeight;
-    if (scrollDelta.current > height / 2) {
-      setTransfrom(false);
-      setScroll(height);
-      scrollDelta.current = 0;
-      return;
-    }
+
     // 滚动结束
     const timerId = window.setTimeout(() => {
       scrollTimerRef.current = null;
       if (!viewRef.current) return;
       const height = viewRef.current.scrollHeight;
-      if (scrollDelta.current < height / 2) {
-        setTransfrom(false);
-        setScroll(0);
+      if (scrollDelta.current > height / 2) {
+        closeFirstView();
       }
       scrollDelta.current = 0;
-    }, SCROLL_END_DELAY);
+    }, 50); // 50ms
 
     scrollTimerRef.current = timerId;
   }, []);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // 确保只处理第一次按下
     if (pointerDown) return;
     setPointerDown(true);
-    if (!isTransfrom) {
-      setTransfrom(true);
-    }
+    setTransfrom(true);
     dragStartRef.current = e.clientY;
   };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!pointerDown) return;
+
+    const start = dragStartRef.current;
+    const current = e.clientY;
+
+    // 只允许向上拖动（current < start）
+    if (current > start) return;
+
+    const distance = start - current;
+
+    if (!viewRef.current) return;
+    const height = viewRef.current.scrollHeight;
+
+    if (distance > height / 2) {
+      setPointerDown(false);
+      setTransfrom(false);
+      closeFirstView();
+      // 取消任何待处理的 rAF
+      if (animationFrameRef.current !== null) {
+        window.cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+      return;
+    }
+
+    // 使用 rAF 优化连续的 setScroll，减少不必要的重渲染
+    if (animationFrameRef.current === null) {
+      animationFrameRef.current = window.requestAnimationFrame(() => {
+        setScroll(distance);
+        animationFrameRef.current = null;
+      });
+    }
+  };
+
   const handlePointerUp = () => {
     if (!pointerDown) return;
     setPointerDown(false);
     setTransfrom(false);
     setScroll(0);
-  };
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!pointerDown) return;
-    const start = dragStartRef.current;
-    const current = e.clientY;
-    if (current > start) return;
-    if (!viewRef.current) return;
-    const height = viewRef.current.scrollHeight;
-    const distance = start - current;
-    if (distance > height / 2) {
-      console.log(height);
-      setPointerDown(false);
-      setTransfrom(false);
-      setScroll(height);
-      return;
+    if (animationFrameRef.current !== null) {
+      window.cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
-    setScroll(distance);
   };
   return (
     <Box
       component="div"
       ref={viewRef}
       sx={{
+        userSelect: "none",
+        touchAction: "none",
+        zIndex: 1200,
         position: "fixed",
-        width: "100%",
+        width: "100vw",
         height: "100vh",
         bgcolor: "background.default",
         transform: `translateY(-${scroll}px)`,
-        transition: isTransfrom
-          ? "none"
-          : "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        transition: isTransfrom ? "none" : "transform 1s ease-in-out",
+        overflowY: "hidden",
       }}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
       onPointerMove={handlePointerMove}
       onWheel={handleWheel}
     >
@@ -183,13 +153,10 @@ function FirstView() {
           <KeyboardDoubleArrowDown fontSize="inherit" />
         </Box>
         <Box
-          onClick={() => {
-            // setScroll(100);
-            // execScroll(500, 800);
-          }}
+          onClick={closeFirstView}
           sx={{
             width: "100%",
-            height: "50%",
+            height: "20%",
             bottom: 0,
             position: "absolute",
             zIndex: 100,
