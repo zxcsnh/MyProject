@@ -1,6 +1,6 @@
 "use client";
-import { Box } from "@mui/material";
-import { ReactNode, useState, useRef, useCallback } from "react";
+import { Box, Typography } from "@mui/material";
+import { ReactNode, useState, useRef, useCallback, useEffect } from "react";
 import { KeyboardDoubleArrowDown } from "@mui/icons-material";
 import TypeWriter from "../component/typeWriter";
 import { keyframes } from "@emotion/react";
@@ -72,21 +72,6 @@ function FirstView() {
 
     const distance = start - current;
 
-    if (!viewRef.current) return;
-    const height = viewRef.current.scrollHeight;
-
-    if (distance > height / 2) {
-      setPointerDown(false);
-      setTransfrom(false);
-      closeFirstView();
-      // 取消任何待处理的 rAF
-      if (animationFrameRef.current !== null) {
-        window.cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
-      return;
-    }
-
     // 使用 rAF 优化连续的 setScroll，减少不必要的重渲染
     if (animationFrameRef.current === null) {
       animationFrameRef.current = window.requestAnimationFrame(() => {
@@ -96,15 +81,26 @@ function FirstView() {
     }
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!pointerDown) return;
-    setPointerDown(false);
-    setTransfrom(false);
-    setScroll(0);
+    if (!viewRef.current) return;
+    const height = viewRef.current.scrollHeight;
+    const start = dragStartRef.current;
+    const current = e.clientY;
+    const distance = start - current;
     if (animationFrameRef.current !== null) {
       window.cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
     }
+    if (distance > height / 2) {
+      setPointerDown(false);
+      setTransfrom(false);
+      closeFirstView();
+      return;
+    }
+    setPointerDown(false);
+    setTransfrom(false);
+    setScroll(0);
   };
   return (
     <Box
@@ -133,12 +129,12 @@ function FirstView() {
           width: "100%",
           height: "100%",
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
           position: "relative",
         }}
       >
-        <Box sx={{ zIndex: 101 }}>
+        <Box sx={{ zIndex: 101, position: "absolute", top: "40%" }}>
           <TypeWriter />
         </Box>
         <Box
@@ -147,8 +143,8 @@ function FirstView() {
             bottom: 0,
             animation: `${upAndDown} 1.5s ease-in-out infinite`,
             color: "primary.main",
+            fontSize: "4rem",
           }}
-          fontSize={48}
         >
           <KeyboardDoubleArrowDown fontSize="inherit" />
         </Box>

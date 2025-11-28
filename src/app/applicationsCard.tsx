@@ -31,64 +31,42 @@ import ObserverCardBox from "@/component/observerCardBox";
 
 function ShowItem({ width }: { width?: number }) {
   return (
-    <Box
+    <Paper
       sx={{
         boxSizing: "border-box",
-        width: width ? width : "50px",
+        width: width ? width : "200px",
+        p: 2,
+        transition: "transform 0.3s ease",
+        cursor: "pointer",
+        backgroundColor: theme.palette.background.default,
+        "&:hover": {
+          transform: "translateY(-5px)",
+          boxShadow: (theme) => `
+            0 8px 16px ${theme.palette.text.secondary} /* 主题色发光效果 */
+          `,
+        },
       }}
     >
-      <Box
-        sx={{
-          border: "1px solid black",
-          borderRadius: "12px",
-          overflow: "hidden",
-          transition: "boxShadow 0.3s ease",
-          cursor: "pointer",
-          "&:hover": {
-            boxShadow: (theme) => `
-            0 0px 16px ${theme.palette.text.secondary} /* 主题色发光效果 */
-          `,
-          },
-        }}
-      >
-        <img
-          src="/file.svg"
-          alt="描述"
-          loading="lazy"
-          style={{
-            width: "100%",
-            height: "auto",
-            objectFit: "cover",
-            display: "block", // 解决底部间隙
-          }}
-        />
-      </Box>
-
-      <Typography variant="caption" color="textPrimary">
+      <Typography variant="h6" color="textPrimary">
         这是标题
       </Typography>
-    </Box>
+      <Typography variant="body1" color="textSecondary">
+        这是一段测试用的介绍文字
+      </Typography>
+    </Paper>
   );
 }
 
-export default function ToolCard() {
-  const ITEMWIDTH = 50;
+export default function ApplicationsCard() {
+  const ITEMWIDTH = 200;
   const [itemWidth, setItemWidth] = useState(ITEMWIDTH);
   return (
     <Paper sx={{ width: "100%", p: 4, boxSizing: "border-box" }}>
       <Stack direction="column" spacing={2}>
         <Box>
           <Typography variant="h5">
-            {" "}
-            <Lightbulb
-              sx={{
-                "&:hover": {
-                  color: "#FFD700",
-                  cursor: "pointer",
-                },
-              }}
-            />
-            工具栏
+            <Lightbulb />
+            应用栏
           </Typography>
         </Box>
         <ObserverCardBox ITEMWIDTH={ITEMWIDTH} setWidth={setItemWidth}>

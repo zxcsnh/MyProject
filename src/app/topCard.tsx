@@ -53,7 +53,7 @@ export default function TopCard() {
         zIndex: 1100,
         boxSizing: "border-box", // 设置后，width 现在包括了 padding 和 border
         width: "100%", // 占据全部宽度
-        p: 2,
+        p: 3,
       }}
     >
       <Paper
@@ -149,7 +149,7 @@ export default function TopCard() {
           >
             <FavoriteBorder />
             <Box component="span" sx={{ pl: 1, display: { xs: "none", sm: "block" } }}>
-              一个按钮
+              点一下
             </Box>
           </Button>
         </Box>

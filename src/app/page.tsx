@@ -27,6 +27,7 @@ import {
 } from "@mui/icons-material";
 import TopCard from "./topCard";
 import ToolCard from "./toolCard";
+import ApplicationsCard from "./applicationsCard";
 import FirstView from "./firstView";
 
 function BackgroundBox({ children }: { children: ReactNode }) {
@@ -74,16 +75,19 @@ export default function Home() {
             px: {
               xs: 1,
               sm: 4,
-              md: 8,
+              md: 16,
             },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             //
             minHeight: "100vh",
+            boxSizing: "border-box",
+            gap: 8,
           }}
         >
           <ToolCard />
+          <ApplicationsCard />
         </Box>
       </BackgroundBox>
     </Box>

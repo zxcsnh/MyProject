@@ -2,7 +2,7 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { keyframes } from "@emotion/react";
-
+import { alpha } from "@mui/material/styles";
 // 定义 CSS 闪烁动画
 const blink = keyframes`
   0% { opacity: 1; }
@@ -12,10 +12,12 @@ const blink = keyframes`
 
 // 光标的样式
 const cursorStyles = {
-  display: "inline-block",
+  // display: "inline-block",
+  position:"absolute",
+  right:0,
   width: "16px",
   height: "1.6em", // 高度与字体大小匹配,
-  transform: "translateY(25%)",
+  transform: "translate(200%,-10%)",
   backgroundColor: "primary.light", // 使用主题文本颜色
   marginLeft: "16px",
 
@@ -91,12 +93,15 @@ export default function TypeWriter() {
         variant="h2"
         component="span"
         sx={{
+          position:"relative",
           fontStyle: "italic",
           fontWeight: "bold",
+          textShadow: (theme) =>
+            `4px 4px 6px ${alpha(theme.palette.secondary.light, 0.4)}`,
           background: (theme) =>
             `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.secondary.light} 90%)`,
           WebkitBackgroundClip: "text", // 将背景裁剪到文本形状
-          color: "transparent", // Fallback for color
+          color: "transparent",
         }}
       >
         {text}
