@@ -75,7 +75,7 @@ export default function ToolCard() {
   const ITEMWIDTH = 50;
   const [itemWidth, setItemWidth] = useState(ITEMWIDTH);
   return (
-    <Paper sx={{ width: "100%", p: 4, boxSizing: "border-box" }}>
+    <Paper sx={{ width: "100%", p: 4, boxSizing: "border-box", borderRadius: "12px" }}>
       <Stack direction="column" spacing={2}>
         <Box>
           <Typography variant="h5">
@@ -100,4 +100,29 @@ export default function ToolCard() {
       </Stack>
     </Paper>
   );
+}
+
+{
+  /* <>
+  <Box
+    sx={{
+      px: 2,
+      pt: 1,
+      // bgcolor: "background.default",
+      display: "inline-block",
+      borderTopLeftRadius: "12px",
+      borderTopRightRadius: "12px",
+      boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
+    }}
+  ></Box>
+  <Box
+    sx={{
+      // bgcolor: "background.default",
+      p: 2,
+      borderRadius: "12px",
+      borderTopLeftRadius: "0",
+      boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
+    }}
+  ></Box>
+</>; */
 }
