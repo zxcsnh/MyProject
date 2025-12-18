@@ -70,37 +70,83 @@ function ShowItem({ width }: { width?: number }) {
     </Box>
   );
 }
-
 export default function ToolCard() {
   const ITEMWIDTH = 50;
   const [itemWidth, setItemWidth] = useState(ITEMWIDTH);
   return (
-    <Paper sx={{ width: "100%", p: 4, boxSizing: "border-box", borderRadius: "12px" }}>
-      <Stack direction="column" spacing={2}>
-        <Box>
-          <Typography variant="h5">
-            {" "}
-            <Lightbulb
-              sx={{
-                "&:hover": {
-                  color: "#FFD700",
-                  cursor: "pointer",
-                },
-              }}
-            />
-            工具栏
-          </Typography>
-        </Box>
-        <ObserverCardBox ITEMWIDTH={ITEMWIDTH} setWidth={setItemWidth}>
-          <ShowItem width={itemWidth}></ShowItem>
-          <ShowItem width={itemWidth}></ShowItem>
-          <ShowItem width={itemWidth}></ShowItem>
-          <ShowItem width={itemWidth}></ShowItem>
-        </ObserverCardBox>
-      </Stack>
+    <Paper
+      sx={{
+        width: "100%",
+        p: 4,
+        boxSizing: "border-box",
+        containerType: "inline-size",
+      }}
+    >
+      <Box
+        sx={{
+          display: "grid",
+          width: "100%",
+          gap: "20px",
+
+          gridTemplateColumns: "repeat(auto-fill, 48px)",
+          justifyContent: "center",
+
+          "@container (min-width: 796px)": {
+            gridTemplateColumns: "repeat(12, minmax(48px, 1fr))",
+          },
+        }}
+      >
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+        <Box>0</Box>
+      </Box>
     </Paper>
   );
 }
+
+// export default function ToolCard() {
+//   const ITEMWIDTH = 50;
+//   const [itemWidth, setItemWidth] = useState(ITEMWIDTH);
+//   return (
+//     <Paper sx={{ width: "100%", p: 4, boxSizing: "border-box", borderRadius: "12px" }}>
+//       <Stack direction="column" spacing={2}>
+//         <Box>
+//           <Typography variant="h5">
+//             {" "}
+//             <Lightbulb
+//               sx={{
+//                 "&:hover": {
+//                   color: "#FFD700",
+//                   cursor: "pointer",
+//                 },
+//               }}
+//             />
+//             工具栏
+//           </Typography>
+//         </Box>
+//         <ObserverCardBox ITEMWIDTH={ITEMWIDTH} setWidth={setItemWidth}>
+//           <ShowItem width={itemWidth}></ShowItem>
+//           <ShowItem width={itemWidth}></ShowItem>
+//           <ShowItem width={itemWidth}></ShowItem>
+//           <ShowItem width={itemWidth}></ShowItem>
+//         </ObserverCardBox>
+//       </Stack>
+//     </Paper>
+//   );
+// }
 
 {
   /* <>

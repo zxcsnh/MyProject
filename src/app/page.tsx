@@ -87,7 +87,7 @@ export default function Home() {
           }}
         >
           <ToolCard />
-          <ApplicationsCard />
+          {/* <ApplicationsCard /> */}
         </Box>
       </BackgroundBox>
     </Box>
