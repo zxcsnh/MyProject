@@ -71,14 +71,14 @@ function ShowItem({ width }: { width?: number }) {
   );
 }
 export default function ToolCard() {
-  const ITEMWIDTH = 50;
-  const [itemWidth, setItemWidth] = useState(ITEMWIDTH);
+  const itemMinWidth = 48;
+  const gridGap = 20;
+  const gridMaxColumn = 12;
+  const gridContainerMinWidth = (itemMinWidth+gridGap)*gridMaxColumn - gridGap;
   return (
     <Paper
       sx={{
         width: "100%",
-        p: 4,
-        boxSizing: "border-box",
         containerType: "inline-size",
       }}
     >
@@ -86,96 +86,41 @@ export default function ToolCard() {
         sx={{
           display: "grid",
           width: "100%",
-          gap: "20px",
-          gridTemplateColumns: "repeat(auto-fill, 48px)",
+          gap: `${gridGap}px`,
+          gridTemplateColumns: `repeat(auto-fill, ${itemMinWidth}px)`,
           justifyContent: "center",
           gridAutoFlow: "row dense",
-          "@container (min-width: 796px)": {
-            gridTemplateColumns: "repeat(12, minmax(48px, 1fr))",
+          // 使用方括号包裹模板字符串作为 Key
+          [`@container (min-width: ${gridContainerMinWidth}px)`]: {
+            gridTemplateColumns: `repeat(${gridMaxColumn}, minmax(${itemMinWidth}px, 1fr))`,
           },
         }}
       >
-        <Box sx={{bgcolor:"green"}}>1</Box>
-        <Box sx={{bgcolor:"green"}}>2</Box>
-        <Box sx={{bgcolor:"green"}}>3</Box>
-        <Box sx={{bgcolor:"green"}}>4</Box>
-        <Box sx={{bgcolor:"green"}}>5</Box>
-        <Box sx={{bgcolor:"green"}}>6</Box>
-        <Box sx={{bgcolor:"green"}}>7</Box>
-        <Box sx={{bgcolor:"green"}}>8</Box>
-        <Box sx={{bgcolor:"green"}}>9</Box>
+        <Box sx={{ bgcolor: "green" }}>1</Box>
+        <Box sx={{ bgcolor: "green" }}>2</Box>
+        <Box sx={{ bgcolor: "green" }}>3</Box>
+        <Box sx={{ bgcolor: "green" }}>4</Box>
+        <Box sx={{ bgcolor: "green" }}>5</Box>
+        <Box sx={{ bgcolor: "green" }}>6</Box>
+        <Box sx={{ bgcolor: "green" }}>7</Box>
+        <Box sx={{ bgcolor: "green" }}>8</Box>
+        <Box sx={{ bgcolor: "green" }}>9</Box>
         <Box
           sx={{
-            bgcolor:"green",
+            bgcolor: "green",
             gridColumn: "span 2", // 占 3 列
             gridRow: "span 2", //占 2 行
           }}
         >
           10
         </Box>
-        <Box sx={{bgcolor:"green"}}>11</Box>
-        <Box sx={{bgcolor:"green"}}>12</Box>
-        <Box sx={{bgcolor:"green"}}>13</Box>
-        <Box sx={{bgcolor:"green"}}>14</Box>
-        <Box sx={{bgcolor:"green"}}>15</Box>
-        <Box sx={{bgcolor:"green"}}>16</Box>
+        <Box sx={{ bgcolor: "green" }}>11</Box>
+        <Box sx={{ bgcolor: "green" }}>12</Box>
+        <Box sx={{ bgcolor: "green" }}>13</Box>
+        <Box sx={{ bgcolor: "green" }}>14</Box>
+        <Box sx={{ bgcolor: "green" }}>15</Box>
+        <Box sx={{ bgcolor: "green" }}>16</Box>
       </Box>
     </Paper>
   );
-}
-
-// export default function ToolCard() {
-//   const ITEMWIDTH = 50;
-//   const [itemWidth, setItemWidth] = useState(ITEMWIDTH);
-//   return (
-//     <Paper sx={{ width: "100%", p: 4, boxSizing: "border-box", borderRadius: "12px" }}>
-//       <Stack direction="column" spacing={2}>
-//         <Box>
-//           <Typography variant="h5">
-//             {" "}
-//             <Lightbulb
-//               sx={{
-//                 "&:hover": {
-//                   color: "#FFD700",
-//                   cursor: "pointer",
-//                 },
-//               }}
-//             />
-//             工具栏
-//           </Typography>
-//         </Box>
-//         <ObserverCardBox ITEMWIDTH={ITEMWIDTH} setWidth={setItemWidth}>
-//           <ShowItem width={itemWidth}></ShowItem>
-//           <ShowItem width={itemWidth}></ShowItem>
-//           <ShowItem width={itemWidth}></ShowItem>
-//           <ShowItem width={itemWidth}></ShowItem>
-//         </ObserverCardBox>
-//       </Stack>
-//     </Paper>
-//   );
-// }
-
-{
-  /* <>
-  <Box
-    sx={{
-      px: 2,
-      pt: 1,
-      // bgcolor: "background.default",
-      display: "inline-block",
-      borderTopLeftRadius: "12px",
-      borderTopRightRadius: "12px",
-      boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-    }}
-  ></Box>
-  <Box
-    sx={{
-      // bgcolor: "background.default",
-      p: 2,
-      borderRadius: "12px",
-      borderTopLeftRadius: "0",
-      boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-    }}
-  ></Box>
-</>; */
 }

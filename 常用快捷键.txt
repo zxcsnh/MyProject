@@ -1,0 +1,10 @@
+功能,Windows 快捷键,macOS 快捷键
+多光标垂直向下扩展    Ctrl + Alt + ↓ (向下) 或 ↑ (向上)
+智能选中下一个相同项  Ctrl + D
+向上/下移动整行      Alt + ↑ / ↓
+向上/下复制整行      Shift + Alt + ↑ / ↓
+批量选中所有匹配项   Ctrl + Shift + L
+快速跳转到某一行     Ctrl + G
+收起/展开代码块      Ctrl + Shift + [ 或 ]
+格式化代码           Shift + Alt + F
+快速打开文件         Ctrl + P
