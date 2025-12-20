@@ -87,31 +87,38 @@ export default function ToolCard() {
           display: "grid",
           width: "100%",
           gap: "20px",
-
           gridTemplateColumns: "repeat(auto-fill, 48px)",
           justifyContent: "center",
-
+          gridAutoFlow: "row dense",
           "@container (min-width: 796px)": {
             gridTemplateColumns: "repeat(12, minmax(48px, 1fr))",
           },
         }}
       >
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
-        <Box>0</Box>
+        <Box sx={{bgcolor:"green"}}>1</Box>
+        <Box sx={{bgcolor:"green"}}>2</Box>
+        <Box sx={{bgcolor:"green"}}>3</Box>
+        <Box sx={{bgcolor:"green"}}>4</Box>
+        <Box sx={{bgcolor:"green"}}>5</Box>
+        <Box sx={{bgcolor:"green"}}>6</Box>
+        <Box sx={{bgcolor:"green"}}>7</Box>
+        <Box sx={{bgcolor:"green"}}>8</Box>
+        <Box sx={{bgcolor:"green"}}>9</Box>
+        <Box
+          sx={{
+            bgcolor:"green",
+            gridColumn: "span 2", // 占 3 列
+            gridRow: "span 2", //占 2 行
+          }}
+        >
+          10
+        </Box>
+        <Box sx={{bgcolor:"green"}}>11</Box>
+        <Box sx={{bgcolor:"green"}}>12</Box>
+        <Box sx={{bgcolor:"green"}}>13</Box>
+        <Box sx={{bgcolor:"green"}}>14</Box>
+        <Box sx={{bgcolor:"green"}}>15</Box>
+        <Box sx={{bgcolor:"green"}}>16</Box>
       </Box>
     </Paper>
   );

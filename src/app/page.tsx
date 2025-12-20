@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <Box>
       {/* first View */}
-      <FirstView></FirstView>
+      {/* <FirstView></FirstView> */}
       <BackgroundBox>
         {/* 浮动菜单栏 */}
         <TopCard />
