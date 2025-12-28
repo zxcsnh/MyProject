@@ -29,7 +29,7 @@ import TopCard from "./topCard";
 import ToolCard from "./toolCard";
 import ApplicationsCard from "./applicationsCard";
 import FirstView from "./firstView";
-import InputSearchCard from "./inputSearchCard";
+import SearchInputBox from "./inputSearchCard";
 
 function BackgroundBox({ children }: { children: ReactNode }) {
   const theme = useTheme();
@@ -87,7 +87,7 @@ export default function Home() {
             gap: 8,
           }}
         >
-          <InputSearchCard />
+          <SearchInputBox />
           <ToolCard />
           {/* <ApplicationsCard /> */}
         </Box>
