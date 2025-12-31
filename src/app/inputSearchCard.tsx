@@ -2,6 +2,157 @@ import { Box, InputBase } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { Search, ArrowDropDown } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
+import IconTextItem from "@/component/IconTextItem";
+import { SEARCH_ENGINE_LIST, searchEngineType } from "@/config/searchEngineList";
+
+
+/**
+ * 获取搜索的值跳转搜索页面
+ * @param inputValue 搜索框的值
+ */
+const submmitSearch = (inputValue: string, url: string) => {
+  const searchUrl = `${url}${encodeURIComponent(inputValue)}`;
+  // 打开新标签页
+  window.open(searchUrl, "_blank", "noopener,noreferrer");
+};
+
+
+/**
+ * 获取搜索框下拉栏的联想词
+ * 使用百度api
+ * @param inputValue
+ * @param setSearchSuggestionList
+ */
+interface BaiduResponse {
+  g?: Array<{ q: string; [key: string]: any }>;
+  [key: string]: any;
+}
+const getSearchSuggestion = (inputValue: string, setSearchSuggestionList: Function) => {
+  if (inputValue === "") {
+    setSearchSuggestionList([]);
+  } else {
+    const suggestionList: string[] = [inputValue];
+    fetch(`/api/baidu/sugrec?prod=pc&wd=${inputValue}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json(); // 将响应解析成 JSON
+      })
+      .then((data: BaiduResponse) => {
+        data?.g?.forEach((item) => {
+          suggestionList.push(item?.q);
+        });
+        setSearchSuggestionList(suggestionList);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+  }
+};
+function ChangeSearchEngine({
+  isShow,
+  searchEngine,
+  setSearchEngine,
+}: {
+  isShow: Boolean;
+  searchEngine: searchEngineType;
+  setSearchEngine: Function;
+}) {
+  return (
+    <Box
+      onMouseDown={(e) => e.preventDefault()}
+      sx={{
+        width: "100%",
+        height: isShow ? "90px" : "0px",
+        bgcolor: (theme) => theme.palette.background.paper,
+        borderRadius: "24px",
+        boxSizing: "border-box",
+        mt: "8px",
+        px: "16px",
+        overflow: "hidden",
+        transition: "height 0.3s ease",
+        boxShadow: (theme) => `0 2px 4px 0 ${alpha(theme.palette.common.black, 0.3)}`,
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      {SEARCH_ENGINE_LIST.map((engine, index) => {
+        return (
+          <IconTextItem
+            key={index}
+            onClick={() => {
+              setSearchEngine(SEARCH_ENGINE_LIST[index]);
+            }}
+            icon={
+              <Box
+                component="img"
+                src={engine.icon}
+                alt={engine.name}
+                sx={{
+                  width: "24px",
+                  height: "24px",
+                }}
+              />
+            }
+            label={engine.name}
+            sx={{
+              borderRadius: "12px",
+              "&:hover": {
+                boxShadow: (theme) =>
+                  `0px 4px 8px 0px ${alpha(theme.palette.common.black, 0.3)}`,
+              },
+            }}
+          />
+        );
+      })}
+    </Box>
+  );
+}
+function SearchSuggestion({
+  isSearchSuggestionShow,
+  inputValue,
+  searchSuggestionList,
+  setInputValue,
+  selectId,
+}: {
+  isSearchSuggestionShow: boolean;
+  inputValue: string;
+  searchSuggestionList: string[];
+  setInputValue: Function;
+  selectId: number;
+}) {
+  return (
+    <Box
+      onMouseDown={(e) => e.preventDefault()}
+      sx={{
+        width: "100%",
+        maxHeight: isSearchSuggestionShow && inputValue ? "480px" : "0",
+        bgcolor: (theme) => theme.palette.background.paper,
+        borderRadius: "24px",
+        mt: "8px",
+        overflow: "hidden",
+        cursor: "pointer",
+        transition: "max-height 0.3s ease",
+        boxShadow: (theme) => `0 2px 4px 0 ${alpha(theme.palette.common.black, 0.3)}`,
+      }}
+    >
+      {searchSuggestionList.map((item, index) => {
+        if (index === 0) return;
+        return (
+          <Box key={index}>
+            <SearchSuggestionItem
+              setInput={setInputValue}
+              text={item}
+              id={index}
+              selectId={selectId}
+            />
+          </Box>
+        );
+      })}
+    </Box>
+  );
+}
 
 function SearchSuggestionItem({
   setInput,
@@ -52,78 +203,67 @@ function SearchSuggestionItem({
     </Box>
   );
 }
+
 export default function SearchInputBox() {
   const [isSearchSuggestionShow, setSearchSuggestionShow] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [isInput, setInput] = useState(false);
   const [searchSuggestionList, setSearchSuggestionList] = useState<string[]>([]);
   const [selectId, setSelectId] = useState(0);
+  const [isSeachEngineSelectShow, setSeachEngineSelectShow] = useState(false);
+  const [searchEngine, setSearchEngine] = useState(SEARCH_ENGINE_LIST[0]);
+  const searchCallBackId = useRef<number | null>(null);
+  // 处理上下键
   const selectionDown = () => {
     const size = searchSuggestionList.length;
     if (size <= 0) return;
-    setSelectId((selectId % size) + 1);
-    setInputValue(searchSuggestionList[selectId % size]);
+    setSelectId((selectId + 1) % size);
+    setInputValue(searchSuggestionList[(selectId + 1) % size]);
   };
   const selectionUp = () => {
     const size = searchSuggestionList.length;
     if (size <= 0) return;
-    setSelectId(((selectId + size - 2) % size) + 1);
-    setInputValue(searchSuggestionList[(selectId + size - 2) % size]);
+    setSelectId((selectId + size - 1) % size);
+    setInputValue(searchSuggestionList[(selectId + size - 1) % size]);
   };
-  const searchCallBackId = useRef<number | null>(null);
-  const submmitSearch = () => {
-    const searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(inputValue)}`;
-    // 打开新标签页
-    window.open(searchUrl, "_blank", "noopener,noreferrer");
-  };
+  // 联想词缓冲
   useEffect(() => {
     // 如果之前有定时器，先清掉
     if (searchCallBackId.current !== null) {
       clearTimeout(searchCallBackId.current);
     }
-
+    if (isInput == false) return;
     // 新建定时器
     searchCallBackId.current = window.setTimeout(() => {
-      if (inputValue === "") {
-        setSearchSuggestionList([]);
-      } else {
-        setSearchSuggestionList(["test1", "test2", "test3", "test4", "test5", "test6"]);
-        // fetch(`/api/ddg/?q=${inputValue}&type=list`)
-        //   .then((response) => {
-        //     if (!response.ok) {
-        //       throw new Error(`HTTP error! status: ${response.status}`);
-        //     }
-        //     return response.json(); // 将响应解析成 JSON
-        //   })
-        //   .then((data) => {
-        //     console.log(data);
-        //   })
-        //   .catch((error) => {
-        //     console.error("Fetch error:", error);
-        //   });
-      }
+      getSearchSuggestion(inputValue, setSearchSuggestionList);
+      setInput(false);
     }, 300);
-
     // 可选：组件卸载时清理定时器
     return () => {
       if (searchCallBackId.current !== null) {
         clearTimeout(searchCallBackId.current);
       }
     };
-  }, [inputValue]);
+  }, [inputValue, isInput]);
 
   return (
-    <Box sx={{position: "relative",}}>
+    <Box
+      sx={{
+        position: "relative",
+        width: {
+          xs: "100%",
+          md: "720px",
+        },
+      }}
+    >
       <Box
         sx={{
           position: "relative",
-          height: "48px",
-          width: {
-            md: "600px",
-            xs: "100%",
-          },
+          height: "52px",
+          width: "100%",
           borderRadius: "24px",
           display: "flex",
-          overflow:"hidden",
+          overflowX: "hidden",
           bgcolor: (theme) => theme.palette.background.paper,
           transition: "all 0.3s ease",
           boxShadow: (theme) => `0 2px 4px 0 ${alpha(theme.palette.common.black, 0.3)}`,
@@ -140,16 +280,19 @@ export default function SearchInputBox() {
             display: "flex",
             alignItems: "center",
             justifyContent: "right",
+            userSelect: "none",
             "&:hover": {
               cursor: "pointer",
               bgcolor: (theme) => alpha(theme.palette.common.black, 0.05),
             },
           }}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => setSeachEngineSelectShow(!isSeachEngineSelectShow)}
         >
           <Box
             component="img"
-            src="/bing.svg"
-            alt="bing"
+            src={searchEngine.icon}
+            alt={searchEngine.name}
             sx={{
               width: "20px",
               height: "20px",
@@ -166,7 +309,10 @@ export default function SearchInputBox() {
           }}
           placeholder="输入搜索内容"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            setInput(true);
+            setInputValue(e.target.value);
+          }}
           onFocus={() => setSearchSuggestionShow(true)}
           onBlur={() => setSearchSuggestionShow(false)}
           onKeyDown={(e) => {
@@ -180,7 +326,7 @@ export default function SearchInputBox() {
             }
             if (e.key === "Enter") {
               console.log("enter");
-              submmitSearch();
+              submmitSearch(inputValue, searchEngine.url);
             }
           }}
         />
@@ -198,41 +344,25 @@ export default function SearchInputBox() {
             },
           }}
           onClick={() => {
-            submmitSearch();
+            submmitSearch(inputValue, searchEngine.url);
           }}
         >
           <Search />
         </Box>
       </Box>
-      <Box
-        onMouseDown={(e) => e.preventDefault()}
-        sx={{
-          width: "100%",
-          maxHeight: isSearchSuggestionShow && inputValue ? "320px" : "0",
-          bgcolor: (theme) => theme.palette.background.paper,
-          position: "absolute",
-          top: "100%",
-          borderRadius: "24px",
-          mt: "8px",
-          overflow: "hidden",
-          cursor: "pointer",
-          transition: "max-height 0.3s ease",
-          boxShadow: (theme) => `0 2px 4px 0 ${alpha(theme.palette.common.black, 0.3)}`,
-        }}
-      >
-        {searchSuggestionList.map((item, index) => {
-          return (
-            // 只有设置了position，zIndex才生效
-            <Box key={index}>
-              <SearchSuggestionItem
-                setInput={setInputValue}
-                text={item}
-                id={index + 1}
-                selectId={selectId}
-              />
-            </Box>
-          );
-        })}
+      <Box sx={{ position: "absolute", top: "100%", width: "100%" }}>
+        <ChangeSearchEngine
+          isShow={isSeachEngineSelectShow}
+          searchEngine={searchEngine}
+          setSearchEngine={setSearchEngine}
+        />
+        <SearchSuggestion
+          isSearchSuggestionShow={isSearchSuggestionShow}
+          inputValue={inputValue}
+          searchSuggestionList={searchSuggestionList}
+          setInputValue={setInputValue}
+          selectId={selectId}
+        />
       </Box>
     </Box>
   );
