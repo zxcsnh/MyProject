@@ -4,6 +4,7 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
     palette: {
+        // mode: 'dark',
         primary: { // 主色调
             main: blue[500],
             light: blue[100],
@@ -15,7 +16,7 @@ const theme = createTheme({
         },
 
         background: {
-            default: '#fafafaff',
+            default: '#eeeeeed0',
             paper: '#ffffff',
         },
         action: {

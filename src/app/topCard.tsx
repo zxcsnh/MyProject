@@ -15,6 +15,7 @@ import {
   ListItem,
   List,
   Typography,
+  alpha
 } from "@mui/material";
 
 import { FavoriteBorder, KeyboardArrowDown } from "@mui/icons-material";
@@ -68,6 +69,11 @@ export default function TopCard() {
           py: 1,
           borderRadius: "16px",
           backgroundColor: (theme) => theme.palette.background.paper,
+          boxShadow: 1,
+          // backgroundImage: "linear-gradient(rgba(103, 80, 164, 0.05), rgba(103, 80, 164, 0.05))",
+          // boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.3)",
+          // boxShadow: (theme) => `0px 2px 4px 0px ${alpha(theme.palette.common.black,0.3)}`,
+          // border: "1px solid black",
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
