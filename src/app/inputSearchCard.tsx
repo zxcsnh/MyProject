@@ -1,10 +1,9 @@
-import { Box, InputBase } from "@mui/material";
+import { Box, IconButton, InputBase, Button, Stack } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import { Search, ArrowDropDown } from "@mui/icons-material";
+import { Search, ArrowDropDown, Clear } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
 import IconTextItem from "@/component/IconTextItem";
 import { SEARCH_ENGINE_LIST, searchEngineType } from "@/config/searchEngineList";
-
 
 /**
  * 获取搜索的值跳转搜索页面
@@ -15,7 +14,6 @@ const submmitSearch = (inputValue: string, url: string) => {
   // 打开新标签页
   window.open(searchUrl, "_blank", "noopener,noreferrer");
 };
-
 
 /**
  * 获取搜索框下拉栏的联想词
@@ -52,11 +50,9 @@ const getSearchSuggestion = (inputValue: string, setSearchSuggestionList: Functi
 };
 function ChangeSearchEngine({
   isShow,
-  searchEngine,
   setSearchEngine,
 }: {
   isShow: Boolean;
-  searchEngine: searchEngineType;
   setSearchEngine: Function;
 }) {
   return (
@@ -70,9 +66,10 @@ function ChangeSearchEngine({
         boxSizing: "border-box",
         mt: "8px",
         px: "16px",
+        gap: "8px",
         overflow: "hidden",
         transition: "height 0.3s ease",
-        boxShadow: (theme) => `0 2px 4px 0 ${alpha(theme.palette.common.black, 0.3)}`,
+        boxShadow: 1,
         display: "flex",
         alignItems: "center",
       }}
@@ -99,8 +96,9 @@ function ChangeSearchEngine({
             sx={{
               borderRadius: "12px",
               "&:hover": {
-                boxShadow: (theme) =>
-                  `0px 4px 8px 0px ${alpha(theme.palette.common.black, 0.3)}`,
+                // boxShadow: 1,
+                backgroundImage: (theme) =>
+                  `linear-gradient(${alpha(theme.palette.common.black, 0.05)})`,
               },
             }}
           />
@@ -127,7 +125,7 @@ function SearchSuggestion({
       onMouseDown={(e) => e.preventDefault()}
       sx={{
         width: "100%",
-        maxHeight: isSearchSuggestionShow && inputValue ? "480px" : "0",
+        maxHeight: isSearchSuggestionShow && inputValue !== "" ? "480px" : "0",
         bgcolor: (theme) => theme.palette.background.paper,
         borderRadius: "24px",
         mt: "8px",
@@ -266,23 +264,22 @@ export default function SearchInputBox() {
           overflowX: "hidden",
           bgcolor: (theme) => theme.palette.background.paper,
           transition: "all 0.3s ease",
-          boxShadow: (theme) => `0 2px 4px 0 ${alpha(theme.palette.common.black, 0.3)}`,
+          boxShadow: 1,
           "&:hover": {
-            boxShadow: (theme) =>
-              `0 8px 24px 0 ${alpha(theme.palette.common.black, 0.3)}`,
+            boxShadow: 3,
+            backgroundImage: (theme) =>
+              `linear-gradient(${alpha(theme.palette.common.black, 0.01)})`,
           },
         }}
       >
-        <Box
+        <IconButton
+          color="inherit"
+          disableRipple
           sx={{
-            width: "64px",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "right",
-            userSelect: "none",
+            borderRadius: 0,
+            width: "52px",
+            padding: 0,
             "&:hover": {
-              cursor: "pointer",
               bgcolor: (theme) => alpha(theme.palette.common.black, 0.05),
             },
           }}
@@ -299,13 +296,13 @@ export default function SearchInputBox() {
             }}
           />
           <ArrowDropDown sx={{ fontSize: "16px" }} />
-        </Box>
-
+        </IconButton>
         <InputBase
           sx={{
-            width: "100%",
+            flex: 1,
             height: "100%",
-            paddingLeft: "8px",
+            paddingLeft: "4px",
+            userSelect: "none",
           }}
           placeholder="输入搜索内容"
           value={inputValue}
@@ -314,7 +311,10 @@ export default function SearchInputBox() {
             setInputValue(e.target.value);
           }}
           onFocus={() => setSearchSuggestionShow(true)}
-          onBlur={() => setSearchSuggestionShow(false)}
+          onBlur={() => {
+            setSearchSuggestionShow(false);
+            console.log("Blur");
+          }}
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
               e.preventDefault();
@@ -330,16 +330,31 @@ export default function SearchInputBox() {
             }
           }}
         />
-
-        <Box
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            aria-label="clear"
+            color="inherit"
+            sx={{
+              width: "32px",
+              height: "32px",
+              "&:hover": {
+                bgcolor: (theme) => alpha(theme.palette.common.black, 0.05),
+              },
+            }}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setInputValue("")}
+          >
+            <Clear fontSize="medium" />
+          </IconButton>
+        </Box>
+        <IconButton
+          color="inherit"
+          disableRipple
           sx={{
-            width: "64px",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            borderRadius: 0,
+            width: "52px",
+            padding: 0,
             "&:hover": {
-              cursor: "pointer",
               bgcolor: (theme) => alpha(theme.palette.common.black, 0.05),
             },
           }}
@@ -347,13 +362,12 @@ export default function SearchInputBox() {
             submmitSearch(inputValue, searchEngine.url);
           }}
         >
-          <Search />
-        </Box>
+          <Search fontSize="medium" />
+        </IconButton>
       </Box>
-      <Box sx={{ position: "absolute", top: "100%", width: "100%" }}>
+      <Box sx={{ position: "absolute", top: "100%", width: "100%", height: 0 }}>
         <ChangeSearchEngine
           isShow={isSeachEngineSelectShow}
-          searchEngine={searchEngine}
           setSearchEngine={setSearchEngine}
         />
         <SearchSuggestion

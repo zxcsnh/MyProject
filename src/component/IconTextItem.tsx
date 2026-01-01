@@ -42,8 +42,7 @@ export default function IconTextItem({
           minWidth: "36px",
           minHeight: "36px",
           borderRadius: "8px",
-          boxShadow: (theme) =>
-            `0px 2px 4px 0px ${alpha(theme.palette.common.black, 0.3)}`,
+          boxShadow: 3,
           ...sxIcon,
         }}
       >

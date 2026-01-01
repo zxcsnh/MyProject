@@ -30,6 +30,7 @@ import ToolCard from "./toolCard";
 import ApplicationsCard from "./applicationsCard";
 import FirstView from "./firstView";
 import SearchInputBox from "./inputSearchCard";
+import TimeCard from "./timeCard";
 
 function BackgroundBox({ children }: { children: ReactNode }) {
   const theme = useTheme();
@@ -69,7 +70,7 @@ export default function Home() {
       {/* <FirstView></FirstView> */}
       <BackgroundBox>
         {/* 浮动菜单栏 */}
-        <TopCard />
+        {/* <TopCard /> */}
         <Box
           sx={{
             pt: 16,
@@ -87,6 +88,7 @@ export default function Home() {
             gap: 8,
           }}
         >
+          <TimeCard />
           <SearchInputBox />
           <ToolCard />
           {/* <ApplicationsCard /> */}
