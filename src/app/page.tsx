@@ -73,7 +73,7 @@ export default function Home() {
         {/* <TopCard /> */}
         <Box
           sx={{
-            pt: 16,
+            // pt: 8,
             px: {
               xs: 1,
               sm: 4,
@@ -85,7 +85,7 @@ export default function Home() {
             //
             minHeight: "100vh",
             boxSizing: "border-box",
-            gap: 8,
+            // gap: 8,
           }}
         >
           <TimeCard />

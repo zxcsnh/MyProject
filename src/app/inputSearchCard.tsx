@@ -83,17 +83,30 @@ function ChangeSearchEngine({
             }}
             icon={
               <Box
-                component="img"
-                src={engine.icon}
-                alt={engine.name}
                 sx={{
-                  width: "24px",
-                  height: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "8px",
+                  boxShadow: 3,
+                  width: "36px",
+                  height: "36px",
                 }}
-              />
+              >
+                <Box
+                  component="img"
+                  src={engine.icon}
+                  alt={engine.name}
+                  sx={{
+                    width: "24px",
+                    height: "24px",
+                  }}
+                />
+              </Box>
             }
             label={engine.name}
             sx={{
+              py: "8px",
               borderRadius: "12px",
               "&:hover": {
                 // boxShadow: 1,
@@ -247,6 +260,7 @@ export default function SearchInputBox() {
   return (
     <Box
       sx={{
+        marginTop: "32px",
         position: "relative",
         width: {
           xs: "100%",
@@ -337,6 +351,7 @@ export default function SearchInputBox() {
             sx={{
               width: "32px",
               height: "32px",
+              opacity: inputValue ? 1 : 0,
               "&:hover": {
                 bgcolor: (theme) => alpha(theme.palette.common.black, 0.05),
               },
@@ -365,7 +380,15 @@ export default function SearchInputBox() {
           <Search fontSize="medium" />
         </IconButton>
       </Box>
-      <Box sx={{ position: "absolute", top: "100%", width: "100%", height: 0 }}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "100%",
+          width: "100%",
+          height: 0,
+          zIndex: 1300,
+        }}
+      >
         <ChangeSearchEngine
           isShow={isSeachEngineSelectShow}
           setSearchEngine={setSearchEngine}

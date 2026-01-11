@@ -28,6 +28,7 @@ import TopCard from "./topCard";
 import { Theme } from "@mui/material/styles";
 import theme from "@/theme/theme";
 import ObserverCardBox from "@/component/observerCardBox";
+import IconTextItem from "@/component/IconTextItem";
 
 function ShowItem({ width }: { width?: number }) {
   return (
@@ -74,12 +75,13 @@ export default function ToolCard() {
   const itemMinWidth = 48;
   const gridGap = 20;
   const gridMaxColumn = 12;
-  const gridContainerMinWidth = (itemMinWidth+gridGap)*gridMaxColumn - gridGap;
+  const gridContainerMinWidth = (itemMinWidth + gridGap) * gridMaxColumn - gridGap;
   return (
-    <Paper
+    <Box
       sx={{
         width: "100%",
         containerType: "inline-size",
+        marginTop: "48px",
       }}
     >
       <Box
@@ -87,11 +89,13 @@ export default function ToolCard() {
           display: "grid",
           width: "100%",
           gap: `${gridGap}px`,
+          // 宽度小于gridContainerMinWidth时，每个子组件固定宽度为itemMinWidth
           gridTemplateColumns: `repeat(auto-fill, ${itemMinWidth}px)`,
           justifyContent: "center",
           gridAutoFlow: "row dense",
           // 使用方括号包裹模板字符串作为 Key
           [`@container (min-width: ${gridContainerMinWidth}px)`]: {
+            // 宽度大于gridContainerMinWidth时，固定为gridMaxColumn列
             gridTemplateColumns: `repeat(${gridMaxColumn}, minmax(${itemMinWidth}px, 1fr))`,
           },
         }}
@@ -108,8 +112,8 @@ export default function ToolCard() {
         <Box
           sx={{
             bgcolor: "green",
-            gridColumn: "span 2", // 占 3 列
-            gridRow: "span 2", //占 2 行
+            gridColumn: "span 2", // 占 2 列
+            gridRow: "span 1", //占 2 行
           }}
         >
           10
@@ -120,7 +124,38 @@ export default function ToolCard() {
         <Box sx={{ bgcolor: "green" }}>14</Box>
         <Box sx={{ bgcolor: "green" }}>15</Box>
         <Box sx={{ bgcolor: "green" }}>16</Box>
+        <Box sx={{isolation: 'isolate',}}>
+        <IconTextItem
+          icon={
+            <Box
+              component="img"
+              src="/bing.svg"
+              sx={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          }
+          label="bing"
+          sx={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            boxShadow: 3,
+            "&:hover": {
+              boxShadow: 7,
+            },
+            // zIndex: "1"
+          }}
+          sxLabel={{
+            position: "absolute",
+            top: "100%",
+          }}
+        />
+        </Box>
+
       </Box>
-    </Paper>
+    </Box>
   );
 }

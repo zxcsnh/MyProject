@@ -1,17 +1,14 @@
 "use client";
 import { Box, Typography } from "@mui/material";
+import { Span } from "next/dist/trace";
 import { useState, useEffect } from "react";
-interface TextProps {
-  old?: string;
-  next: string;
-  fontSize?: number;
-}
 
-function TextSlideFade({ old = "", next, fontSize = 64 }: TextProps) {
-  const [current, setCurrent] = useState(old); // 当前显示内容
+function TextSlideFade({ next }: { next: string }) {
+  const [current, setCurrent] = useState(next); // 当前显示内容
   const [nextContent, setNextContent] = useState(next); // 待切换内容
   const [animating, setAnimating] = useState(false); // 是否在动画中
-
+  const animationInterval = 300;
+  const transitionAnimation = `transform ${animationInterval}ms ease, opacity ${animationInterval}ms ease`;
   // 当 next 变化时触发动画
   useEffect(() => {
     if (next === current) return; // 内容相同不动
@@ -22,7 +19,7 @@ function TextSlideFade({ old = "", next, fontSize = 64 }: TextProps) {
     const timer = setTimeout(() => {
       setCurrent(next);
       setAnimating(false);
-    }, 300); // 这里 300ms 与 CSS transition 一致
+    }, animationInterval);
 
     return () => clearTimeout(timer);
   }, [next]);
@@ -32,15 +29,16 @@ function TextSlideFade({ old = "", next, fontSize = 64 }: TextProps) {
       sx={{
         overflow: "hidden",
         position: "relative",
-        height: `${fontSize}px`,
+        // height: `${fontSize}px`,
         display: "inline-block",
-        fontSize: `${fontSize}px`,
+        // fontSize: `${fontSize}px`,
         lineHeight: 1,
-        // minWidth: "2ch",
       }}
     >
-      {/* 旧内容 */}
+      {/* 用于占据空间 */}
       <Box sx={{ opacity: 0 }}>{current}</Box>
+
+      {/* 旧内容 */}
       <Box
         sx={{
           position: "absolute",
@@ -48,7 +46,7 @@ function TextSlideFade({ old = "", next, fontSize = 64 }: TextProps) {
           top: 0,
           transform: animating ? "translateY(100%)" : "translateY(0%)",
           opacity: animating ? 0 : 1,
-          transition: animating ? "transform 300ms ease, opacity 300ms ease" : "",
+          transition: animating ? transitionAnimation : "",
         }}
       >
         {current}
@@ -62,7 +60,7 @@ function TextSlideFade({ old = "", next, fontSize = 64 }: TextProps) {
           top: 0,
           transform: animating ? "translateY(0%)" : "translateY(-100%)",
           opacity: animating ? 1 : 0,
-          transition: animating ? "transform 300ms ease, opacity 0.3s ease" : "",
+          transition: animating ? transitionAnimation : "",
         }}
       >
         {nextContent}
@@ -70,39 +68,88 @@ function TextSlideFade({ old = "", next, fontSize = 64 }: TextProps) {
     </Box>
   );
 }
-export default function TimeCard() {
-  const [time, setTime] = useState(new Date());
-  useEffect(() => {
-    setTime(new Date());
-    const id = setInterval(() => {
-      setTime(() => {
-        return new Date();
-      });
-    }, 1000);
-    return () => clearInterval(id); // 正确！返回一个函数
-  }, [setTime]);
+function Colon() {
   return (
     <Box
+      component="span"
       sx={{
-        "@font-face": {
-          fontFamily: "Monocraft Local", // 局部使用的名称
-          src: `url('/font/Monocraft-no-ligatures.ttf') format('truetype')`,
-          fontWeight: "normal",
-          fontStyle: "normal",
-          fontDisplay: "swap",
-        },
-        // color: "primary.dark",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        // width: `${fontSize * 0.4}px`,
+        // height: `${fontSize}px`,
+        // fontSize: `${fontSize}px`,
+        lineHeight: 1,
       }}
     >
-      {/* <Typography sx={{ fontFamily: "Monocraft Local, monospace", fontSize: "4rem" }}>
-        {time?.toLocaleTimeString()}
-      </Typography> */}
-      {/* 1. 将时间转化为类似 ["1", "2", "0", "5", "4", "8"] 的数组 */}
-      {[time.getHours(), time.getMinutes(), time.getSeconds()]
-        .flatMap((val) => [Math.floor(val / 10), val % 10])
-        .map((digit, index) => (
-          <TextSlideFade key={index} next={String(digit)} />
+      :
+    </Box>
+  );
+}
+
+export default function TimeCard() {
+  // const [time, setTime] = useState<Date | null>(null);
+  const [time, setTime] = useState(() => new Date());
+
+  useEffect(() => {
+    setTime(new Date());
+    const id = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!time) return null;
+
+  const split = (val: number) => [Math.floor(val / 10), val % 10];
+  const getMonthDay = (time: Date) => `${time.getMonth() + 1}月${time.getDate()}日`;
+  const getWeek = (time: Date) => {
+    const weekMap = ["日", "一", "二", "三", "四", "五", "六"];
+    return `星期${weekMap[time.getDay()]}`;
+  };
+  return (
+    <Box sx={{marginTop: "32px"}}>
+      <Box
+        sx={{
+          "@font-face": {
+            fontFamily: "Monocraft Local",
+            src: `url('/font/Monocraft-no-ligatures.ttf') format('truetype')`,
+            fontWeight: "normal",
+            fontStyle: "normal",
+            fontDisplay: "swap",
+          },
+          display: "inline-flex",
+          alignItems: "center",
+          fontSize: "64px",
+          // fontFamily: "Monocraft Local, monospace",
+        }}
+      >
+        {split(time.getHours()).map((d, i) => (
+          <TextSlideFade key={`h-${i}`} next={String(d)} />
         ))}
+
+        <Colon />
+
+        {split(time.getMinutes()).map((d, i) => (
+          <TextSlideFade key={`m-${i}`} next={String(d)} />
+        ))}
+
+        <Colon />
+
+        {split(time.getSeconds()).map((d, i) => (
+          <TextSlideFade key={`s-${i}`} next={String(d)} />
+        ))}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "24px",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "24px",
+        }}
+      >
+        <Box component="span">{getMonthDay(time)}</Box>
+        <Box component="span">{getWeek(time)}</Box>
+      </Box>
     </Box>
   );
 }

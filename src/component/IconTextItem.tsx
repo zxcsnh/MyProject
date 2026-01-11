@@ -14,7 +14,6 @@ export default function IconTextItem({
   icon,
   label,
   onClick,
-  active,
   sx,
   sxIcon,
   sxLabel,
@@ -27,28 +26,13 @@ export default function IconTextItem({
         alignItems: "center",
         flexDirection: "column",
         width: "64px",
-        py: "8px",
         cursor: "pointer",
-        transition: "all 0.2s",
         position: "relative",
+        zIndex: 0,
         ...sx,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minWidth: "36px",
-          minHeight: "36px",
-          borderRadius: "8px",
-          boxShadow: 3,
-          ...sxIcon,
-        }}
-      >
-        {icon}
-      </Box>
-
+      <>{icon}</>
       <Typography
         variant="body2"
         noWrap
