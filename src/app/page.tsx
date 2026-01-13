@@ -1,38 +1,18 @@
 "use client";
 
-import {
-  Box,
-  Paper,
-  Card,
-  CardHeader,
-  CardContent,
-  useTheme,
-  autocompleteClasses,
-  Avatar,
-  Divider,
-  ButtonGroup,
-  Button,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { ReactNode } from "react";
+import { Box, useTheme } from "@mui/material";
+import { ReactNode, useRef, forwardRef } from "react";
 import { alpha } from "@mui/material/styles";
-import {
-  FavoriteBorder,
-  Height,
-  KeyboardArrowDown,
-  Translate,
-  Lightbulb,
-  KeyboardDoubleArrowDown,
-} from "@mui/icons-material";
+
 import TopCard from "./topCard";
 import ToolCard from "./toolCard";
 import ApplicationsCard from "./applicationsCard";
 import FirstView from "./firstView";
 import SearchInputBox from "./inputSearchCard";
 import TimeCard from "./timeCard";
+import HeaderBox from "./headerBox";
 
-function BackgroundBox({ children }: { children: ReactNode }) {
+function BackgroundBox({ children }: { children?: React.ReactNode }) {
   const theme = useTheme();
   const dotColor = alpha(theme.palette.text.disabled, 0.03); // 背景点的颜色
   const dotRadius = 4; // 背景点的半径
@@ -52,10 +32,13 @@ function BackgroundBox({ children }: { children: ReactNode }) {
         backgroundColor: theme.palette.background.default,
         backgroundSize: `${spacing}px ${spacing}px`,
         backgroundRepeat: "repeat",
-        width: "100%",
         boxSizing: "border-box",
-        minHeight: "100vh",
-        overflowY: "auto",
+        width: "100%",
+        height: "100%",
+        // overflowY: "auto",
+        overflow: "hidden",
+        position: "absolute",
+        zIndex: -1,
       }}
     >
       {children}
@@ -64,16 +47,21 @@ function BackgroundBox({ children }: { children: ReactNode }) {
 }
 
 export default function Home() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   return (
-    <Box>
-      {/* first View */}
-      {/* <FirstView></FirstView> */}
-      <BackgroundBox>
-        {/* 浮动菜单栏 */}
-        {/* <TopCard /> */}
+    // 视口
+    <Box
+      ref={containerRef}
+      sx={{ position: "relative", height: "100vh", overflow: "auto" }}
+    >
+      {/* 用于撑起内容，background的长度相对于此 */}
+      <Box sx={{ position: "relative", minHeight: "100%" }}>
+        {/* <FirstView></FirstView> */}
+        <BackgroundBox />
+        <HeaderBox containerRef={containerRef}></HeaderBox>
         <Box
           sx={{
-            // pt: 8,
+            overflowY: "auto",
             px: {
               xs: 1,
               sm: 4,
@@ -88,12 +76,12 @@ export default function Home() {
             // gap: 8,
           }}
         >
-          <TimeCard />
+          {/* <TimeCard /> */}
           <SearchInputBox />
           <ToolCard />
-          {/* <ApplicationsCard /> */}
+          <Box sx={{ height: "1000px" }}>123</Box>
         </Box>
-      </BackgroundBox>
+      </Box>
     </Box>
   );
 }

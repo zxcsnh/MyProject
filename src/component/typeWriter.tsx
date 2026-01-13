@@ -90,19 +90,19 @@ export default function TypeWriter() {
   return (
     <Box>
       <Typography
-        variant="h2"
-        component="span"
-        sx={{
-          position:"relative",
-          fontStyle: "italic",
-          fontWeight: "bold",
-          textShadow: (theme) =>
-            `4px 4px 6px ${alpha(theme.palette.secondary.light, 0.4)}`,
-          background: (theme) =>
-            `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.secondary.light} 90%)`,
-          WebkitBackgroundClip: "text", // 将背景裁剪到文本形状
-          color: "transparent",
-        }}
+        // variant="h2"
+        // component="span"
+        // sx={{
+        //   position:"relative",
+        //   fontStyle: "italic",
+        //   fontWeight: "bold",
+        //   textShadow: (theme) =>
+        //     `4px 4px 6px ${alpha(theme.palette.secondary.light, 0.4)}`,
+        //   background: (theme) =>
+        //     `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.secondary.light} 90%)`,
+        //   WebkitBackgroundClip: "text", // 将背景裁剪到文本形状
+        //   color: "transparent",
+        // }}
       >
         {text}
         <Box component="span" sx={cursorStyles} />
