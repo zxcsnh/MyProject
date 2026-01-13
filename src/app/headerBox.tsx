@@ -80,8 +80,13 @@ export default function HeaderBox({
     };
   }, []);
   const rotateAnimation = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  75% { transform: rotate(360deg); } /* 在一半的时间内完成旋转 */
+  100% { transform: rotate(360deg); } /* 剩下的时间保持不动 */
+`;
+  const rotateAnimationInfinite = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 `;
   return (
     <Box
@@ -97,30 +102,88 @@ export default function HeaderBox({
         alignItems: "center",
         justifyContent: "center",
         transition: "all 0.3s ease",
-        px: 7,
+        px: {
+          xs: 1,
+          md: 7,
+        },
       }}
     >
       <Box
         sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "left" }}
       >
         <Box
-          component="img"
-          src="/google.svg"
           sx={{
+            position: "relative",
             width: 56,
             height: 56,
-            borderRadius: "50%", // 关键属性
-            objectFit: "cover", // 确保图片不被拉伸
-            border: "2px solid",
-            borderColor: "primary.main",
-            boxShadow: 3,
             cursor: "pointer",
-            animation: `${rotateAnimation} 3s ease infinite`,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              xs: {},
+              md: {
+                transform: "scale(2) translateY(25%)",
+                "& .hover-avater-border": {
+                  animation: `${rotateAnimationInfinite} 2s linear infinite reverse`,
+                },
+                "& + .hover-avater-name": {
+                  opacity: 0,
+                  transform: "translateX(100%)",
+                },
+                "& .hover-avater-img": {
+                  animation: "none",
+                },
+              },
+            },
           }}
-        />
+        >
+          <Box
+            className="hover-avater-border"
+            sx={{
+              display: "block",
+              width: "100%", // 调整了尺寸以便演示
+              height: "100%",
+              borderRadius: "50%",
+              background: (theme) => `conic-gradient(
+                ${theme.palette.secondary.dark}, 
+                ${theme.palette.secondary.main}, 
+                ${theme.palette.secondary.light},
+                ${theme.palette.primary.dark},
+                ${theme.palette.primary.main},
+                ${theme.palette.primary.light},
+                ${theme.palette.secondary.dark}
+              )`,
+              position: "absolute",
+              top: 0,
+              right: 0,
+              zIndex: -1,
+            }}
+          ></Box>
+          <Box
+            className="hover-avater-img"
+            component="img"
+            src="/avatar.jpg"
+            sx={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "2px solid",
+              boxSizing: "border-box",
+              borderColor: "transparent", // 直接设为透明
+              boxShadow: 3,
+              cursor: "pointer",
+              animation: `${rotateAnimation} 4s ease infinite`,
+              // transition: "rotate 0.3s ease",
+            }}
+          />
+        </Box>
         <Box
+          className="hover-avater-name"
           sx={{
-            display: "inline-block",
+            display: {
+              xs: "none",
+              md: "inline-block",
+            },
             alignItems: "center",
             px: 2,
             py: "4px",
@@ -143,7 +206,7 @@ export default function HeaderBox({
       <Box
         sx={{
           position: "relative",
-          overflow: "hidden",
+          overflowY: "hidden",
           width: "300px",
         }}
       >
@@ -153,11 +216,11 @@ export default function HeaderBox({
             top: "50%",
             left: "50%",
             transform: isScrollingUp ? "translate(-50%, 150%)" : "translate(-50%, -50%)",
-            // opacity: 1,
+            opacity: isScrollingUp ? 0 : 1,
             transition: "all 0.3s ease",
           }}
         >
-          <TypeWriter></TypeWriter>
+          <TypeWriter left="「 " right=" 」"></TypeWriter>
         </Box>
         <Box
           sx={{
@@ -209,7 +272,7 @@ export default function HeaderBox({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              bgcolor: "text.secondary",
+              bgcolor: "text.primary",
               color: "white",
               boxShadow: 2,
               cursor: "pointer",

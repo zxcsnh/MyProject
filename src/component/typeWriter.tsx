@@ -1,5 +1,5 @@
 "use client";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, SxProps, Theme } from "@mui/material";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { keyframes } from "@emotion/react";
 import { alpha } from "@mui/material/styles";
@@ -10,23 +10,19 @@ const blink = keyframes`
   100% { opacity: 1; }
 `;
 
-// 光标的样式
-const cursorStyles = {
-  // display: "inline-block",
-  position:"absolute",
-  right:0,
-  width: "16px",
-  height: "1.6em", // 高度与字体大小匹配,
-  transform: "translate(200%,-10%)",
-  backgroundColor: "primary.light", // 使用主题文本颜色
-  marginLeft: "16px",
-
-  // 动画：应用闪烁效果
-  animation: `${blink} 1s step-end infinite`,
-};
-
-export default function TypeWriter() {
-  const str = "Life is Fantastic";
+export default function TypeWriter({
+  str = "Life is Fantastic",
+  sx,
+  cursorSx,
+  left,
+  right,
+}: {
+  str?: string;
+  sx?: SxProps<Theme>;
+  cursorSx?: SxProps<Theme>;
+  left?: string;
+  right?: string;
+}) {
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
@@ -87,25 +83,41 @@ export default function TypeWriter() {
     runCycle({ printInterval: 100, deleteInterval: 50 });
     return stopInterval;
   }, [runCycle, stopInterval]);
+
   return (
     <Box>
       <Typography
-        // variant="h2"
-        // component="span"
-        // sx={{
-        //   position:"relative",
-        //   fontStyle: "italic",
-        //   fontWeight: "bold",
-        //   textShadow: (theme) =>
-        //     `4px 4px 6px ${alpha(theme.palette.secondary.light, 0.4)}`,
-        //   background: (theme) =>
-        //     `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.secondary.light} 90%)`,
-        //   WebkitBackgroundClip: "text", // 将背景裁剪到文本形状
-        //   color: "transparent",
-        // }}
+        noWrap
+        sx={{
+          position: "relative",
+          fontStyle: "italic",
+          fontWeight: "bold",
+          minHeight: "1.2em",
+          textShadow: (theme) =>
+            `4px 4px 6px ${alpha(theme.palette.secondary.light, 0.4)}`,
+          background: (theme) =>
+            `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.secondary.light} 90%)`,
+          WebkitBackgroundClip: "text", // 将背景裁剪到文本形状
+          color: "transparent",
+          ...sx,
+        }}
       >
+        {left}
         {text}
-        <Box component="span" sx={cursorStyles} />
+        {right}
+        <Box
+          component="span"
+          sx={{
+            display: "inline-block", // 改为行内块
+            width: "8px",
+            height: "1.2em",
+            backgroundColor: "primary.light",
+            marginLeft: "4px", // 适当间距
+            flexShrink: 0, // 防止光标被挤压
+            animation: `${blink} 1s step-end infinite`,
+            ...cursorSx,
+          }}
+        />
       </Typography>
     </Box>
   );
