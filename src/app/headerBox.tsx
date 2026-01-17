@@ -5,6 +5,7 @@ import { ArrowUpward, Translate } from "@mui/icons-material";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
 import Link from "next/link";
 import TypeWriter from "@/component/typeWriter";
+import { alpha } from "@mui/material/styles";
 export default function HeaderBox({
   containerRef,
 }: {
@@ -109,41 +110,100 @@ export default function HeaderBox({
       }}
     >
       <Box
-        sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "left" }}
+        sx={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "left",
+          position: "relative",
+        }}
       >
+        {/* 头像 */}
         <Box
           sx={{
             position: "relative",
             width: 56,
             height: 56,
             cursor: "pointer",
-            transition: "all 0.3s ease",
+
+            "& .hover-avater-container": {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              zIndex: 1,
+            },
+
+            "& .hover-avater-button-container": {
+              pointerEvents: "none",
+            },
+
+            "& .hover-avater-button": {
+              width: "100%",
+              opacity: 0,
+              // transform: "translateY(-100%)",
+              translate: "0% -100%",
+              transition: "all 0.3s ease", // 默认收起动画：快且无延迟
+              mt: 1,
+              textTransform: "none",
+              borderRadius: "12px",
+              // fontSize: "0.875rem",
+              fontWeight: 600,
+              // py: 0.8,
+              backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.5),
+              backdropFilter: "blur(8px)", // 毛玻璃
+              color: "text.primary",
+              boxShadow: 3,
+              "&:hover": {
+                backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.5),
+                transform: "scale(1.05) !important", // 悬停微扩
+                boxShadow: 4,
+              },
+            },
+
             "&:hover": {
-              xs: {},
-              md: {
-                transform: "scale(2) translateY(25%)",
-                "& .hover-avater-border": {
-                  animation: `${rotateAnimationInfinite} 2s linear infinite reverse`,
-                },
-                "& + .hover-avater-name": {
-                  opacity: 0,
-                  transform: "translateX(100%)",
-                },
-                "& .hover-avater-img": {
-                  animation: "none",
+              "& + .hover-avater-name": {
+                opacity: 0,
+                transform: "translateX(100%)",
+              },
+
+              "& .hover-avater-container": {
+                md: {
+                  top: 0,
+                  width: 128,
+                  height: "auto",
+                  "& .hover-avater-border": {
+                    animation: `${rotateAnimationInfinite} 2s linear infinite reverse`,
+                    Filter: "blur(8px)",
+                  },
+                  "& .hover-avater-button": {
+                    opacity: 1,
+                    pointerEvents: "auto",
+                    translate: "0% 0%",
+                    transition:
+                      "translate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 0.08s), all 0.4s ease",
+                  },
+                  "& .hover-avater-img": {
+                    animation: "none",
+                  },
                 },
               },
             },
           }}
         >
-          <Box
-            className="hover-avater-border"
-            sx={{
-              display: "block",
-              width: "100%", // 调整了尺寸以便演示
-              height: "100%",
-              borderRadius: "50%",
-              background: (theme) => `conic-gradient(
+          <Box className="hover-avater-container">
+            {/* 头像边框  */}
+            <Box
+              className="hover-avater-border"
+              sx={{
+                display: "block",
+                width: "100%",
+                aspectRatio: "1 / 1", // 固定宽高比
+                borderRadius: "50%",
+                background: (theme) => `conic-gradient(
                 ${theme.palette.secondary.dark}, 
                 ${theme.palette.secondary.main}, 
                 ${theme.palette.secondary.light},
@@ -152,30 +212,54 @@ export default function HeaderBox({
                 ${theme.palette.primary.light},
                 ${theme.palette.secondary.dark}
               )`,
-              position: "absolute",
-              top: 0,
-              right: 0,
-              zIndex: -1,
-            }}
-          ></Box>
-          <Box
-            className="hover-avater-img"
-            component="img"
-            src="/avatar.jpg"
-            sx={{
-              width: "100%",
-              height: "100%",
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "2px solid",
-              boxSizing: "border-box",
-              borderColor: "transparent", // 直接设为透明
-              boxShadow: 3,
-              cursor: "pointer",
-              animation: `${rotateAnimation} 4s ease infinite`,
-              // transition: "rotate 0.3s ease",
-            }}
-          />
+                position: "absolute",
+                top: 0,
+                right: 0,
+                zIndex: -1,
+              }}
+            />
+            {/* 头像图片 */}
+            <Box
+              className="hover-avater-img"
+              component="img"
+              src="/avatar.jpg"
+              sx={{
+                width: "100%",
+                aspectRatio: "1 / 1", // 固定宽高比
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "2px solid",
+                boxSizing: "border-box",
+                borderColor: "transparent", // 边框颜色为透明
+                boxShadow: 3,
+                cursor: "pointer",
+                animation: `${rotateAnimation} 4s ease infinite`,
+              }}
+            />
+            <Box className="hover-avater-button-container">
+              <Button
+                className="hover-avater-button"
+                sx={{ "--i": 1 }}
+                variant="contained"
+              >
+                123
+              </Button>
+              <Button
+                className="hover-avater-button"
+                sx={{ "--i": 2 }}
+                variant="contained"
+              >
+                123
+              </Button>
+              <Button
+                className="hover-avater-button"
+                sx={{ "--i": 3 }}
+                variant="contained"
+              >
+                123
+              </Button>
+            </Box>
+          </Box>
         </Box>
         <Box
           className="hover-avater-name"
@@ -185,8 +269,9 @@ export default function HeaderBox({
               md: "inline-block",
             },
             alignItems: "center",
-            px: 2,
-            py: "4px",
+            px: 4,
+            py: 0.5,
+            ml: 2,
             borderRadius: "24px",
             cursor: "pointer",
             "&:hover": { bgcolor: "primary.main", color: "white" },
@@ -220,7 +305,7 @@ export default function HeaderBox({
             transition: "all 0.3s ease",
           }}
         >
-          <TypeWriter left="「 " right=" 」"></TypeWriter>
+          <TypeWriter left="「 " right=" 」" cursorSx={{ display: "none" }}></TypeWriter>
         </Box>
         <Box
           sx={{
@@ -236,12 +321,12 @@ export default function HeaderBox({
               sx={{
                 display: "inline-block",
                 alignItems: "center",
-                px: 2,
-                py: "4px",
+                px: 4,
+                py: 0.5,
                 borderRadius: "24px",
                 cursor: "pointer",
                 color: "text.primary",
-                "&:hover": { px: 3, bgcolor: "primary.main", color: "white" },
+                "&:hover": { px: 8, bgcolor: "primary.main", color: "white" },
                 transition: "all 0.3s ease",
               }}
             >
@@ -261,10 +346,13 @@ export default function HeaderBox({
             justifyContent: "right",
           }}
         >
+          这里添加个时间
           <Box
             onClick={upToTop}
             sx={{
+              ml: 2,
               opacity: scrolledHeight >= 1 ? 1 : 0,
+              // visibility:"hidden",
               transform: scrolledHeight >= 1 ? "" : "translateX(100%)",
               width: scrolledHeight > 95 ? "72px" : "32px",
               height: "32px",
