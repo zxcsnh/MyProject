@@ -93,7 +93,7 @@ export default function HeaderBox({
     <Box
       sx={{
         height: "64px",
-        // position: "sticky", 向上查找最近的拥有滚动条祖先
+        // position: "sticky"  ---  向上查找最近的拥有滚动条祖先
         position: "sticky",
         top: 0,
         bgcolor: (theme) => (scrolled ? theme.palette.background.paper : ""),
@@ -122,88 +122,89 @@ export default function HeaderBox({
         <Box
           sx={{
             position: "relative",
-            width: 56,
-            height: 56,
-            cursor: "pointer",
-
-            "& .hover-avater-container": {
+            width: "64px",
+            height: "64px",
+          }}
+        >
+          {/* 头像实际定位容器 */}
+          <Box
+            className="hover-avater-container"
+            sx={{
               position: "absolute",
               top: 0,
               left: 0,
               width: "100%",
               height: "100%",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
               zIndex: 1,
-            },
-
-            "& .hover-avater-button-container": {
-              pointerEvents: "none",
-            },
-
-            "& .hover-avater-button": {
-              width: "100%",
-              opacity: 0,
-              // transform: "translateY(-100%)",
-              translate: "0% -100%",
-              transition: "all 0.3s ease", // 默认收起动画：快且无延迟
-              mt: 1,
-              textTransform: "none",
-              borderRadius: "12px",
-              // fontSize: "0.875rem",
-              fontWeight: 600,
-              // py: 0.8,
-              backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.5),
-              backdropFilter: "blur(8px)", // 毛玻璃
-              color: "text.primary",
-              boxShadow: 3,
-              "&:hover": {
-                backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.5),
-                transform: "scale(1.05) !important", // 悬停微扩
-                boxShadow: 4,
-              },
-            },
-
-            "&:hover": {
-              "& + .hover-avater-name": {
+              "& .hover-avater-button": {
+                width: "100%",
                 opacity: 0,
-                transform: "translateX(100%)",
-              },
-
-              "& .hover-avater-container": {
-                md: {
-                  top: 0,
-                  width: 128,
-                  height: "auto",
-                  "& .hover-avater-border": {
-                    animation: `${rotateAnimationInfinite} 2s linear infinite reverse`,
-                    Filter: "blur(8px)",
-                  },
-                  "& .hover-avater-button": {
-                    opacity: 1,
-                    pointerEvents: "auto",
-                    translate: "0% 0%",
-                    transition:
-                      "translate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 0.08s), all 0.4s ease",
-                  },
-                  "& .hover-avater-img": {
-                    animation: "none",
-                  },
+                translate: "0% -100%",
+                transition: "all 0.3s ease 0.5s", // 默认收起动画：快且无延迟
+                mt: 1,
+                textTransform: "none",
+                borderRadius: "12px",
+                fontWeight: 600,
+                backgroundColor: (theme) => alpha(theme.palette.primary.light, 0.5),
+                backdropFilter: "blur(8px)", // 毛玻璃
+                color: "text.primary",
+                boxShadow: 3,
+                "&:hover": {
+                  backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.5),
+                  transform: "scale(1.05) !important", // 悬停微扩
+                  boxShadow: 4,
                 },
               },
-            },
-          }}
-        >
-          <Box className="hover-avater-container">
+              "&:hover": {
+                "& .hover-avater-button-container": {
+                  visibility: "visible",
+                  opacity: 1,
+                },
+                "& .hover-avater-button": {
+                  opacity: 1,
+                  translate: "0% 0%",
+                  transition:
+                    "translate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 0.1s + 0.5s)",
+                },
+
+                "& .hover-avater-border": {
+                  translate: "60% 90%",
+                  scale: "1.5",
+                  animation: `${rotateAnimationInfinite} 2s linear infinite reverse`,
+                  Filter: "blur(8px)",
+                  "& .hover-avater-img": {
+                    animation: `${rotateAnimationInfinite} 2s linear infinite`,
+                  },
+                },
+                "& + .hover-avater-name": {
+                  // opacity: 0,
+                  // transform: "translateX(100%)",
+                  translate: "50% 100%",
+                  pointerEvents: "none"
+                },
+              },
+            }}
+          >
             {/* 头像边框  */}
             <Box
-              className="hover-avater-border"
               sx={{
-                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 0,
+                zIndex: 1,
                 width: "100%",
-                aspectRatio: "1 / 1", // 固定宽高比
-                borderRadius: "50%",
-                background: (theme) => `conic-gradient(
+                height: "100%",
+              }}
+            >
+              <Box
+                className="hover-avater-border"
+                sx={{
+                  scale: "0.9",
+                  display: "block",
+                  width: "100%",
+                  aspectRatio: "1 / 1", // 固定宽高比
+                  borderRadius: "50%",
+                  background: (theme) => `conic-gradient(
                 ${theme.palette.secondary.dark}, 
                 ${theme.palette.secondary.main}, 
                 ${theme.palette.secondary.light},
@@ -212,80 +213,90 @@ export default function HeaderBox({
                 ${theme.palette.primary.light},
                 ${theme.palette.secondary.dark}
               )`,
-                position: "absolute",
-                top: 0,
-                right: 0,
-                zIndex: -1,
-              }}
-            />
-            {/* 头像图片 */}
+                  transition: "all 0.3s ease 0.5s",
+                }}
+              >
+                {/* 头像图片 */}
+                <Box
+                  className="hover-avater-img"
+                  component="img"
+                  src="/avatar.jpg"
+                  sx={{
+                    position: "absolute",
+                    width: "100%",
+                    aspectRatio: "1 / 1", // 固定宽高比
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "2px solid transparent",
+                    boxSizing: "border-box",
+                    borderColor: "transparent", // 边框颜色为透明
+                    boxShadow: 3,
+                    cursor: "pointer",
+                    animation: `${rotateAnimation} 4s ease infinite`,
+                  }}
+                />
+              </Box>
+            </Box>
+
             <Box
-              className="hover-avater-img"
-              component="img"
-              src="/avatar.jpg"
+              className="hover-avater-button-container"
               sx={{
-                width: "100%",
-                aspectRatio: "1 / 1", // 固定宽高比
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid",
-                boxSizing: "border-box",
-                borderColor: "transparent", // 边框颜色为透明
-                boxShadow: 3,
-                cursor: "pointer",
-                animation: `${rotateAnimation} 4s ease infinite`,
+                // pointerEvents: "none",
+                visibility: "hidden",
+                opacity: 0,
+                position: "absolute",
+                bgcolor: "background.paper",
+                p: 2,
+                pt: 10,
+                top: "100%",
+                width: "256px",
+                borderRadius: "24px",
+                border: "1px solid",
+                borderColor: "divider",
+                transition: "all 0.3s ease 0.5s",
               }}
-            />
-            <Box className="hover-avater-button-container">
-              <Button
-                className="hover-avater-button"
-                sx={{ "--i": 1 }}
-                variant="contained"
-              >
+            >
+              <Button className="hover-avater-button" sx={{ "--i": 1 }}>
                 123
               </Button>
-              <Button
-                className="hover-avater-button"
-                sx={{ "--i": 2 }}
-                variant="contained"
-              >
+              <Button className="hover-avater-button" sx={{ "--i": 2 }}>
                 123
               </Button>
-              <Button
-                className="hover-avater-button"
-                sx={{ "--i": 3 }}
-                variant="contained"
-              >
+              <Button className="hover-avater-button" sx={{ "--i": 3 }}>
                 123
               </Button>
             </Box>
           </Box>
-        </Box>
-        <Box
-          className="hover-avater-name"
-          sx={{
-            display: {
-              xs: "none",
-              md: "inline-block",
-            },
-            alignItems: "center",
-            px: 4,
-            py: 0.5,
-            ml: 2,
-            borderRadius: "24px",
-            cursor: "pointer",
-            "&:hover": { bgcolor: "primary.main", color: "white" },
-            transition: "all 0.3s ease",
-          }}
-        >
-          <Typography
-            variant="h6"
+          <Box
+            className="hover-avater-name"
             sx={{
-              fontWeight: "bold",
+              zIndex: 1,
+              display: {
+                xs: "none",
+                md: "inline-block",
+              },
+              position: "absolute",
+              left: "100%",
+              top: "50%",
+              translate: "0% -50%",
+              px: 4,
+              py: 0.5,
+              ml: 2,
+              borderRadius: "24px",
+              cursor: "pointer",
+              "&:hover": { bgcolor: "primary.main", color: "white" },
+              transition: "all 0.3s ease, translate 0.3s ease 0.5s",
             }}
           >
-            Ning
-          </Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+              }}
+            >
+              Ning
+            </Typography>
+          </Box>
         </Box>
       </Box>
       <Box
