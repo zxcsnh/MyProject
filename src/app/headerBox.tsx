@@ -6,6 +6,7 @@ import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
 import Link from "next/link";
 import TypeWriter from "@/component/typeWriter";
 import { alpha } from "@mui/material/styles";
+import TimeBox from "./timeBox";
 export default function HeaderBox({
   containerRef,
 }: {
@@ -96,13 +97,17 @@ export default function HeaderBox({
         // position: "sticky"  ---  向上查找最近的拥有滚动条祖先
         position: "sticky",
         top: 0,
-        bgcolor: (theme) => (scrolled ? theme.palette.background.paper : ""),
+        backgroundColor: (theme) =>
+          scrolled ? theme.palette.background.paper : "transparent",
+        backgroundImage: (theme) =>
+          `linear-gradient(to bottom, ${theme.palette.background.paper} 30%, transparent)`,
+        backgroundBlendMode: "overlay",
         boxShadow: scrolled ? 1 : "none",
         zIndex: 10000,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        transition: "all 0.3s ease",
+        transition: "all 0.3s ease, background-color 0.5s ease",
         px: {
           xs: 1,
           md: 7,
@@ -136,11 +141,26 @@ export default function HeaderBox({
               width: "100%",
               height: "100%",
               zIndex: 1,
+
+              "& .hover-avater-button-container": {
+                visibility: "hidden",
+                opacity: 0,
+                position: "absolute",
+                bgcolor: "background.paper",
+                p: 2,
+                pt: 10,
+                top: "100%",
+                width: "256px",
+                borderRadius: "24px",
+                border: "1px solid",
+                borderColor: "divider",
+                transition: "all 0.3s ease",
+              },
               "& .hover-avater-button": {
                 width: "100%",
                 opacity: 0,
                 translate: "0% -100%",
-                transition: "all 0.3s ease 0.5s", // 默认收起动画：快且无延迟
+                transition: "all 0.3s ease",
                 mt: 1,
                 textTransform: "none",
                 borderRadius: "12px",
@@ -155,19 +175,57 @@ export default function HeaderBox({
                   boxShadow: 4,
                 },
               },
+              "& .hover-avater-border": {
+                scale: "0.9",
+                display: "block",
+                width: "100%",
+                aspectRatio: "1 / 1", // 固定宽高比
+                borderRadius: "50%",
+                background: (theme) => `conic-gradient(
+                ${theme.palette.secondary.dark}, 
+                ${theme.palette.secondary.main}, 
+                ${theme.palette.secondary.light},
+                ${theme.palette.primary.dark},
+                ${theme.palette.primary.main},
+                ${theme.palette.primary.light},
+                ${theme.palette.secondary.dark}
+              )`,
+                transition: "all 0.3s ease",
+              },
+              "& + .hover-avater-name": {
+                zIndex: 1,
+                display: {
+                  xs: "none",
+                  md: "inline-block",
+                },
+                position: "absolute",
+                left: "100%",
+                top: "50%",
+                translate: "0% -50%",
+                px: 4,
+                py: 0.5,
+                ml: 2,
+                borderRadius: "24px",
+                cursor: "pointer",
+                "&:hover": { bgcolor: "primary.main", color: "white" },
+                transition: "all 0.3s ease, translate 0.3s ease",
+              },
               "&:hover": {
                 "& .hover-avater-button-container": {
+                  transition: "all 0.3s ease",
                   visibility: "visible",
                   opacity: 1,
                 },
                 "& .hover-avater-button": {
                   opacity: 1,
                   translate: "0% 0%",
-                  transition:
-                    "translate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 0.1s + 0.5s)",
+                  transition: `translate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) calc((var(--i)) * 0.2s),
+                     opacity 0.4s ease calc((var(--i)) * 0.2s)
+                    `,
                 },
 
                 "& .hover-avater-border": {
+                  transition: "all 0.3s ease",
                   translate: "60% 90%",
                   scale: "1.5",
                   animation: `${rotateAnimationInfinite} 2s linear infinite reverse`,
@@ -177,10 +235,9 @@ export default function HeaderBox({
                   },
                 },
                 "& + .hover-avater-name": {
-                  // opacity: 0,
-                  // transform: "translateX(100%)",
                   translate: "50% 100%",
-                  pointerEvents: "none"
+                  pointerEvents: "none",
+                  transition: "all 0.3s ease, translate 0.3s ease",
                 },
               },
             }}
@@ -196,26 +253,7 @@ export default function HeaderBox({
                 height: "100%",
               }}
             >
-              <Box
-                className="hover-avater-border"
-                sx={{
-                  scale: "0.9",
-                  display: "block",
-                  width: "100%",
-                  aspectRatio: "1 / 1", // 固定宽高比
-                  borderRadius: "50%",
-                  background: (theme) => `conic-gradient(
-                ${theme.palette.secondary.dark}, 
-                ${theme.palette.secondary.main}, 
-                ${theme.palette.secondary.light},
-                ${theme.palette.primary.dark},
-                ${theme.palette.primary.main},
-                ${theme.palette.primary.light},
-                ${theme.palette.secondary.dark}
-              )`,
-                  transition: "all 0.3s ease 0.5s",
-                }}
-              >
+              <Box className="hover-avater-border">
                 {/* 头像图片 */}
                 <Box
                   className="hover-avater-img"
@@ -238,56 +276,19 @@ export default function HeaderBox({
               </Box>
             </Box>
 
-            <Box
-              className="hover-avater-button-container"
-              sx={{
-                // pointerEvents: "none",
-                visibility: "hidden",
-                opacity: 0,
-                position: "absolute",
-                bgcolor: "background.paper",
-                p: 2,
-                pt: 10,
-                top: "100%",
-                width: "256px",
-                borderRadius: "24px",
-                border: "1px solid",
-                borderColor: "divider",
-                transition: "all 0.3s ease 0.5s",
-              }}
-            >
+            <Box className="hover-avater-button-container">
               <Button className="hover-avater-button" sx={{ "--i": 1 }}>
-                123
+                <Typography variant="body1">首页</Typography>
               </Button>
               <Button className="hover-avater-button" sx={{ "--i": 2 }}>
-                123
+                <Typography variant="body1">GitHub</Typography>
               </Button>
               <Button className="hover-avater-button" sx={{ "--i": 3 }}>
-                123
+                <Typography variant="body1">未完待续</Typography>
               </Button>
             </Box>
           </Box>
-          <Box
-            className="hover-avater-name"
-            sx={{
-              zIndex: 1,
-              display: {
-                xs: "none",
-                md: "inline-block",
-              },
-              position: "absolute",
-              left: "100%",
-              top: "50%",
-              translate: "0% -50%",
-              px: 4,
-              py: 0.5,
-              ml: 2,
-              borderRadius: "24px",
-              cursor: "pointer",
-              "&:hover": { bgcolor: "primary.main", color: "white" },
-              transition: "all 0.3s ease, translate 0.3s ease 0.5s",
-            }}
-          >
+          <Box className="hover-avater-name">
             <Typography
               variant="h6"
               sx={{
@@ -355,17 +356,22 @@ export default function HeaderBox({
             display: "flex",
             alignItems: "center",
             justifyContent: "right",
+            position: "relative",
           }}
         >
-          这里添加个时间
+          <Box>
+            <TimeBox subTimeSx={{ display: "none" }}>这是时间</TimeBox>
+          </Box>
           <Box
             onClick={upToTop}
             sx={{
-              ml: 2,
+              position: "relative",
+              ml: scrolledHeight >= 1 ? 2 : 0, // 隐藏时消除外边距
+              width:
+                scrolledHeight >= 1 ? (scrolledHeight > 95 ? "72px" : "32px") : "0px",
+              transform: scrolledHeight >= 1 ? "scale(1)" : "scale(0) translateX(100%)",
+              pointerEvents: scrolledHeight >= 1 ? "auto" : "none",
               opacity: scrolledHeight >= 1 ? 1 : 0,
-              // visibility:"hidden",
-              transform: scrolledHeight >= 1 ? "" : "translateX(100%)",
-              width: scrolledHeight > 95 ? "72px" : "32px",
               height: "32px",
               borderRadius: scrolledHeight > 95 ? "50px" : "50%",
               display: "flex",
@@ -375,7 +381,6 @@ export default function HeaderBox({
               color: "white",
               boxShadow: 2,
               cursor: "pointer",
-              position: "relative",
               overflow: "hidden",
               transition: "all 0.3s ease",
 

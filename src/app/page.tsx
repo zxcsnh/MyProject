@@ -9,8 +9,9 @@ import ToolCard from "./toolCard";
 import ApplicationsCard from "./applicationsCard";
 import FirstView from "./firstView";
 import SearchInputBox from "./inputSearchCard";
-import TimeCard from "./timeCard";
+import TimeBox from "./timeBox";
 import HeaderBox from "./headerBox";
+import BottomBox from "./bottomBox";
 
 function BackgroundBox({ children }: { children?: React.ReactNode }) {
   const theme = useTheme();
@@ -59,6 +60,7 @@ export default function Home() {
         {/* <FirstView></FirstView> */}
         <BackgroundBox />
         <HeaderBox containerRef={containerRef}></HeaderBox>
+        
         <Box
           sx={{
             overflowY: "auto",
@@ -81,6 +83,7 @@ export default function Home() {
           <ToolCard />
           <Box sx={{ height: "1000px" }}>123</Box>
         </Box>
+        <BottomBox></BottomBox>
       </Box>
     </Box>
   );
